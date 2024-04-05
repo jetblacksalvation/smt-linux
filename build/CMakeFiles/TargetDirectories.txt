@@ -1,0 +1,3 @@
+/home/jetblack/workspace-vscode/smt-linux/build/CMakeFiles/main.dir
+/home/jetblack/workspace-vscode/smt-linux/build/CMakeFiles/edit_cache.dir
+/home/jetblack/workspace-vscode/smt-linux/build/CMakeFiles/rebuild_cache.dir
