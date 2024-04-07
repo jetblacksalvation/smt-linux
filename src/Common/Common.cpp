@@ -24,7 +24,7 @@ Game::Game() {
         // Handle the case where the window is already created
     }
 
-    GameState inst();
+    GameState inst{};
 }
 void Game::run() {
     //WorldHelper::T_PrimitiveShape points({ sf::Vector2f{-50,50}, sf::Vector2f{50, 50}, sf::Vector2f{-50,50 }, sf::Vector2f{-50,150},  sf::Vector2f{50,150},sf::Vector2f{50,50 } });//last index is so that lines can wrap back to start 
@@ -49,6 +49,7 @@ void Game::run() {
             
         window->clear(sf::Color::White);
         //draw3DScene(this->worldData.worldObjects, angle, playerPos);
+        std::cout<<GameState::playerStateInstance<<" is the inst <<\n";
         GameState::playerStateInstance->HandleState();
 
 

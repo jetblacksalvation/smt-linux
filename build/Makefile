@@ -57,13 +57,33 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/jetblack/workspace-vscode/smt-linux
+CMAKE_SOURCE_DIR = /home/jetblack/workspace-vscode/real-smt-linux
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/jetblack/workspace-vscode/smt-linux/build
+CMAKE_BINARY_DIR = /home/jetblack/workspace-vscode/real-smt-linux/build
 
 #=============================================================================
 # Targets provided globally by CMake.
+
+# Special rule for the target package
+package: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool..."
+	/usr/bin/cpack --config ./CPackConfig.cmake
+.PHONY : package
+
+# Special rule for the target package
+package/fast: package
+.PHONY : package/fast
+
+# Special rule for the target package_source
+package_source:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool for source..."
+	/usr/bin/cpack --config ./CPackSourceConfig.cmake /home/jetblack/workspace-vscode/real-smt-linux/build/CPackSourceConfig.cmake
+.PHONY : package_source
+
+# Special rule for the target package_source
+package_source/fast: package_source
+.PHONY : package_source/fast
 
 # Special rule for the target edit_cache
 edit_cache:
@@ -85,11 +105,56 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 .PHONY : rebuild_cache/fast
 
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\" \"devel\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+.PHONY : list_install_components/fast
+
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
+
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/jetblack/workspace-vscode/smt-linux/build/CMakeFiles /home/jetblack/workspace-vscode/smt-linux/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jetblack/workspace-vscode/real-smt-linux/build/CMakeFiles /home/jetblack/workspace-vscode/real-smt-linux/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/jetblack/workspace-vscode/smt-linux/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jetblack/workspace-vscode/real-smt-linux/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -117,161 +182,226 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named main
+# Target rules for targets named CMakeSFMLProject
 
 # Build rule for target.
-main: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main
-.PHONY : main
+CMakeSFMLProject: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeSFMLProject
+.PHONY : CMakeSFMLProject
 
 # fast build rule for target.
-main/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
-.PHONY : main/fast
+CMakeSFMLProject/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CMakeSFMLProject.dir/build.make CMakeFiles/CMakeSFMLProject.dir/build
+.PHONY : CMakeSFMLProject/fast
 
-Common/Common.o: Common/Common.cpp.o
-.PHONY : Common/Common.o
+#=============================================================================
+# Target rules for targets named sfml-system
 
-# target to build an object file
-Common/Common.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Common/Common.cpp.o
-.PHONY : Common/Common.cpp.o
+# Build rule for target.
+sfml-system: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 sfml-system
+.PHONY : sfml-system
 
-Common/Common.i: Common/Common.cpp.i
-.PHONY : Common/Common.i
+# fast build rule for target.
+sfml-system/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/sfml-build/src/SFML/System/CMakeFiles/sfml-system.dir/build.make _deps/sfml-build/src/SFML/System/CMakeFiles/sfml-system.dir/build
+.PHONY : sfml-system/fast
 
-# target to preprocess a source file
-Common/Common.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Common/Common.cpp.i
-.PHONY : Common/Common.cpp.i
+#=============================================================================
+# Target rules for targets named sfml-window
 
-Common/Common.s: Common/Common.cpp.s
-.PHONY : Common/Common.s
+# Build rule for target.
+sfml-window: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 sfml-window
+.PHONY : sfml-window
 
-# target to generate assembly for a file
-Common/Common.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Common/Common.cpp.s
-.PHONY : Common/Common.cpp.s
+# fast build rule for target.
+sfml-window/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/sfml-build/src/SFML/Window/CMakeFiles/sfml-window.dir/build.make _deps/sfml-build/src/SFML/Window/CMakeFiles/sfml-window.dir/build
+.PHONY : sfml-window/fast
 
-Common/CommonMath.o: Common/CommonMath.cpp.o
-.PHONY : Common/CommonMath.o
+#=============================================================================
+# Target rules for targets named sfml-network
 
-# target to build an object file
-Common/CommonMath.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Common/CommonMath.cpp.o
-.PHONY : Common/CommonMath.cpp.o
+# Build rule for target.
+sfml-network: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 sfml-network
+.PHONY : sfml-network
 
-Common/CommonMath.i: Common/CommonMath.cpp.i
-.PHONY : Common/CommonMath.i
+# fast build rule for target.
+sfml-network/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/sfml-build/src/SFML/Network/CMakeFiles/sfml-network.dir/build.make _deps/sfml-build/src/SFML/Network/CMakeFiles/sfml-network.dir/build
+.PHONY : sfml-network/fast
 
-# target to preprocess a source file
-Common/CommonMath.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Common/CommonMath.cpp.i
-.PHONY : Common/CommonMath.cpp.i
+#=============================================================================
+# Target rules for targets named sfml-graphics
 
-Common/CommonMath.s: Common/CommonMath.cpp.s
-.PHONY : Common/CommonMath.s
+# Build rule for target.
+sfml-graphics: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 sfml-graphics
+.PHONY : sfml-graphics
 
-# target to generate assembly for a file
-Common/CommonMath.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Common/CommonMath.cpp.s
-.PHONY : Common/CommonMath.cpp.s
+# fast build rule for target.
+sfml-graphics/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/sfml-build/src/SFML/Graphics/CMakeFiles/sfml-graphics.dir/build.make _deps/sfml-build/src/SFML/Graphics/CMakeFiles/sfml-graphics.dir/build
+.PHONY : sfml-graphics/fast
 
-Common/GameMenu.o: Common/GameMenu.cpp.o
-.PHONY : Common/GameMenu.o
+#=============================================================================
+# Target rules for targets named sfml-audio
 
-# target to build an object file
-Common/GameMenu.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Common/GameMenu.cpp.o
-.PHONY : Common/GameMenu.cpp.o
+# Build rule for target.
+sfml-audio: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 sfml-audio
+.PHONY : sfml-audio
 
-Common/GameMenu.i: Common/GameMenu.cpp.i
-.PHONY : Common/GameMenu.i
+# fast build rule for target.
+sfml-audio/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/sfml-build/src/SFML/Audio/CMakeFiles/sfml-audio.dir/build.make _deps/sfml-build/src/SFML/Audio/CMakeFiles/sfml-audio.dir/build
+.PHONY : sfml-audio/fast
 
-# target to preprocess a source file
-Common/GameMenu.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Common/GameMenu.cpp.i
-.PHONY : Common/GameMenu.cpp.i
-
-Common/GameMenu.s: Common/GameMenu.cpp.s
-.PHONY : Common/GameMenu.s
-
-# target to generate assembly for a file
-Common/GameMenu.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Common/GameMenu.cpp.s
-.PHONY : Common/GameMenu.cpp.s
-
-Common/GameState.o: Common/GameState.cpp.o
-.PHONY : Common/GameState.o
+src/Common/Common.o: src/Common/Common.cpp.o
+.PHONY : src/Common/Common.o
 
 # target to build an object file
-Common/GameState.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Common/GameState.cpp.o
-.PHONY : Common/GameState.cpp.o
+src/Common/Common.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CMakeSFMLProject.dir/build.make CMakeFiles/CMakeSFMLProject.dir/src/Common/Common.cpp.o
+.PHONY : src/Common/Common.cpp.o
 
-Common/GameState.i: Common/GameState.cpp.i
-.PHONY : Common/GameState.i
+src/Common/Common.i: src/Common/Common.cpp.i
+.PHONY : src/Common/Common.i
 
 # target to preprocess a source file
-Common/GameState.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Common/GameState.cpp.i
-.PHONY : Common/GameState.cpp.i
+src/Common/Common.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CMakeSFMLProject.dir/build.make CMakeFiles/CMakeSFMLProject.dir/src/Common/Common.cpp.i
+.PHONY : src/Common/Common.cpp.i
 
-Common/GameState.s: Common/GameState.cpp.s
-.PHONY : Common/GameState.s
+src/Common/Common.s: src/Common/Common.cpp.s
+.PHONY : src/Common/Common.s
 
 # target to generate assembly for a file
-Common/GameState.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Common/GameState.cpp.s
-.PHONY : Common/GameState.cpp.s
+src/Common/Common.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CMakeSFMLProject.dir/build.make CMakeFiles/CMakeSFMLProject.dir/src/Common/Common.cpp.s
+.PHONY : src/Common/Common.cpp.s
 
-Common/Grid.o: Common/Grid.cpp.o
-.PHONY : Common/Grid.o
+src/Common/CommonMath.o: src/Common/CommonMath.cpp.o
+.PHONY : src/Common/CommonMath.o
 
 # target to build an object file
-Common/Grid.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Common/Grid.cpp.o
-.PHONY : Common/Grid.cpp.o
+src/Common/CommonMath.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CMakeSFMLProject.dir/build.make CMakeFiles/CMakeSFMLProject.dir/src/Common/CommonMath.cpp.o
+.PHONY : src/Common/CommonMath.cpp.o
 
-Common/Grid.i: Common/Grid.cpp.i
-.PHONY : Common/Grid.i
+src/Common/CommonMath.i: src/Common/CommonMath.cpp.i
+.PHONY : src/Common/CommonMath.i
 
 # target to preprocess a source file
-Common/Grid.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Common/Grid.cpp.i
-.PHONY : Common/Grid.cpp.i
+src/Common/CommonMath.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CMakeSFMLProject.dir/build.make CMakeFiles/CMakeSFMLProject.dir/src/Common/CommonMath.cpp.i
+.PHONY : src/Common/CommonMath.cpp.i
 
-Common/Grid.s: Common/Grid.cpp.s
-.PHONY : Common/Grid.s
+src/Common/CommonMath.s: src/Common/CommonMath.cpp.s
+.PHONY : src/Common/CommonMath.s
 
 # target to generate assembly for a file
-Common/Grid.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Common/Grid.cpp.s
-.PHONY : Common/Grid.cpp.s
+src/Common/CommonMath.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CMakeSFMLProject.dir/build.make CMakeFiles/CMakeSFMLProject.dir/src/Common/CommonMath.cpp.s
+.PHONY : src/Common/CommonMath.cpp.s
 
-main.o: main.cpp.o
-.PHONY : main.o
+src/Common/GameMenu.o: src/Common/GameMenu.cpp.o
+.PHONY : src/Common/GameMenu.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.o
-.PHONY : main.cpp.o
+src/Common/GameMenu.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CMakeSFMLProject.dir/build.make CMakeFiles/CMakeSFMLProject.dir/src/Common/GameMenu.cpp.o
+.PHONY : src/Common/GameMenu.cpp.o
 
-main.i: main.cpp.i
-.PHONY : main.i
+src/Common/GameMenu.i: src/Common/GameMenu.cpp.i
+.PHONY : src/Common/GameMenu.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.i
-.PHONY : main.cpp.i
+src/Common/GameMenu.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CMakeSFMLProject.dir/build.make CMakeFiles/CMakeSFMLProject.dir/src/Common/GameMenu.cpp.i
+.PHONY : src/Common/GameMenu.cpp.i
 
-main.s: main.cpp.s
-.PHONY : main.s
+src/Common/GameMenu.s: src/Common/GameMenu.cpp.s
+.PHONY : src/Common/GameMenu.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.s
-.PHONY : main.cpp.s
+src/Common/GameMenu.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CMakeSFMLProject.dir/build.make CMakeFiles/CMakeSFMLProject.dir/src/Common/GameMenu.cpp.s
+.PHONY : src/Common/GameMenu.cpp.s
+
+src/Common/GameState.o: src/Common/GameState.cpp.o
+.PHONY : src/Common/GameState.o
+
+# target to build an object file
+src/Common/GameState.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CMakeSFMLProject.dir/build.make CMakeFiles/CMakeSFMLProject.dir/src/Common/GameState.cpp.o
+.PHONY : src/Common/GameState.cpp.o
+
+src/Common/GameState.i: src/Common/GameState.cpp.i
+.PHONY : src/Common/GameState.i
+
+# target to preprocess a source file
+src/Common/GameState.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CMakeSFMLProject.dir/build.make CMakeFiles/CMakeSFMLProject.dir/src/Common/GameState.cpp.i
+.PHONY : src/Common/GameState.cpp.i
+
+src/Common/GameState.s: src/Common/GameState.cpp.s
+.PHONY : src/Common/GameState.s
+
+# target to generate assembly for a file
+src/Common/GameState.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CMakeSFMLProject.dir/build.make CMakeFiles/CMakeSFMLProject.dir/src/Common/GameState.cpp.s
+.PHONY : src/Common/GameState.cpp.s
+
+src/Common/Grid.o: src/Common/Grid.cpp.o
+.PHONY : src/Common/Grid.o
+
+# target to build an object file
+src/Common/Grid.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CMakeSFMLProject.dir/build.make CMakeFiles/CMakeSFMLProject.dir/src/Common/Grid.cpp.o
+.PHONY : src/Common/Grid.cpp.o
+
+src/Common/Grid.i: src/Common/Grid.cpp.i
+.PHONY : src/Common/Grid.i
+
+# target to preprocess a source file
+src/Common/Grid.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CMakeSFMLProject.dir/build.make CMakeFiles/CMakeSFMLProject.dir/src/Common/Grid.cpp.i
+.PHONY : src/Common/Grid.cpp.i
+
+src/Common/Grid.s: src/Common/Grid.cpp.s
+.PHONY : src/Common/Grid.s
+
+# target to generate assembly for a file
+src/Common/Grid.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CMakeSFMLProject.dir/build.make CMakeFiles/CMakeSFMLProject.dir/src/Common/Grid.cpp.s
+.PHONY : src/Common/Grid.cpp.s
+
+src/main.o: src/main.cpp.o
+.PHONY : src/main.o
+
+# target to build an object file
+src/main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CMakeSFMLProject.dir/build.make CMakeFiles/CMakeSFMLProject.dir/src/main.cpp.o
+.PHONY : src/main.cpp.o
+
+src/main.i: src/main.cpp.i
+.PHONY : src/main.i
+
+# target to preprocess a source file
+src/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CMakeSFMLProject.dir/build.make CMakeFiles/CMakeSFMLProject.dir/src/main.cpp.i
+.PHONY : src/main.cpp.i
+
+src/main.s: src/main.cpp.s
+.PHONY : src/main.s
+
+# target to generate assembly for a file
+src/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CMakeSFMLProject.dir/build.make CMakeFiles/CMakeSFMLProject.dir/src/main.cpp.s
+.PHONY : src/main.cpp.s
 
 # Help Target
 help:
@@ -280,26 +410,37 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... install"
+	@echo "... install/local"
+	@echo "... install/strip"
+	@echo "... list_install_components"
+	@echo "... package"
+	@echo "... package_source"
 	@echo "... rebuild_cache"
-	@echo "... main"
-	@echo "... Common/Common.o"
-	@echo "... Common/Common.i"
-	@echo "... Common/Common.s"
-	@echo "... Common/CommonMath.o"
-	@echo "... Common/CommonMath.i"
-	@echo "... Common/CommonMath.s"
-	@echo "... Common/GameMenu.o"
-	@echo "... Common/GameMenu.i"
-	@echo "... Common/GameMenu.s"
-	@echo "... Common/GameState.o"
-	@echo "... Common/GameState.i"
-	@echo "... Common/GameState.s"
-	@echo "... Common/Grid.o"
-	@echo "... Common/Grid.i"
-	@echo "... Common/Grid.s"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... CMakeSFMLProject"
+	@echo "... sfml-audio"
+	@echo "... sfml-graphics"
+	@echo "... sfml-network"
+	@echo "... sfml-system"
+	@echo "... sfml-window"
+	@echo "... src/Common/Common.o"
+	@echo "... src/Common/Common.i"
+	@echo "... src/Common/Common.s"
+	@echo "... src/Common/CommonMath.o"
+	@echo "... src/Common/CommonMath.i"
+	@echo "... src/Common/CommonMath.s"
+	@echo "... src/Common/GameMenu.o"
+	@echo "... src/Common/GameMenu.i"
+	@echo "... src/Common/GameMenu.s"
+	@echo "... src/Common/GameState.o"
+	@echo "... src/Common/GameState.i"
+	@echo "... src/Common/GameState.s"
+	@echo "... src/Common/Grid.o"
+	@echo "... src/Common/Grid.i"
+	@echo "... src/Common/Grid.s"
+	@echo "... src/main.o"
+	@echo "... src/main.i"
+	@echo "... src/main.s"
 .PHONY : help
 
 

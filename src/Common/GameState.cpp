@@ -31,6 +31,7 @@ void RoamingState::OnLoad() {
 }
 
 GameState::GameState() {
+    std::cout<<"GameState Built\n";
 	GameState::gameStateInstance = std::shared_ptr<GameState>(this);
     
 	//default state to roaming, this will be changed later 

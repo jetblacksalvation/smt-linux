@@ -1,25 +1,33 @@
-cmake_minimum_required(VERSION 3.0)
-project(YourProjectName)
+cmake_minimum_required(VERSION 3.16)
+project(CMakeSFMLProject LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
-# Add SFML library
-find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
+# Set the build type to Debug
+set(CMAKE_BUILD_TYPE Debug)
 
-# Set source directory
-set(SRCDIR ${CMAKE_CURRENT_SOURCE_DIR}/Common)
+include(FetchContent)
+FetchContent_Declare(SFML
+    GIT_REPOSITORY https://github.com/SFML/SFML.git
+    GIT_TAG 2.6.x)
+FetchContent_MakeAvailable(SFML)
 
-# Get all source and header files in the source directory
-file(GLOB_RECURSE SOURCES "${SRCDIR}/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
-file(GLOB_RECURSE HEADERS "${SRCDIR}/*.hpp")
+file(GLOB_RECURSE SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/Common/*.cpp" )
+file(GLOB_RECURSE HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/src/Common/*.hpp")
 
-# Add executable target
-add_executable(main ${SOURCES} ${HEADERS})
+add_executable(CMakeSFMLProject src/main.cpp ${SOURCES})
+target_link_libraries(CMakeSFMLProject PRIVATE sfml-graphics)
+target_compile_features(CMakeSFMLProject PRIVATE cxx_std_17)
 
-# Include headers directory
-target_include_directories(main PRIVATE ${SRCDIR})
+target_include_directories(CMakeSFMLProject PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Common)
 
-# Link SFML libraries to the executable
-target_link_libraries(main PRIVATE sfml-graphics sfml-window sfml-system)
+if(WIN32)
+    add_custom_command(
+        TARGET CMakeSFMLProject
+        COMMENT "Copy OpenAL DLL"
+        PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SFML_SOURCE_DIR}/extlibs/bin/$<IF:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>,x64,x86>/openal32.dll $<TARGET_FILE_DIR:CMakeSFMLProject>
+        VERBATIM)
+endif()
+
+install(TARGETS CMakeSFMLProject)
