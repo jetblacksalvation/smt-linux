@@ -1,6 +1,6 @@
 #include "GameState.hpp"
 //re-decs 
-
+#include <cmath>
 std::unordered_map<std::type_index, std::shared_ptr<IPlayerState>> PlayerStateRegistrar::instances;
 
 GameState::TGameStateInstance GameState::gameStateInstance;
@@ -63,7 +63,6 @@ void RoamingState::MovePlayer() {
         break;
     case 1:
         newPosition.x -= 1;
-        newPosition.y -= 1;
         break;
     case 2:
         newPosition.y -= 1;
@@ -161,10 +160,21 @@ void RoamingState::HandleState() {
     std::cout << "INDEX = " << faceIndex << std::endl;
 
     if (GameState::gameStateInstance->keys[ROT_LEFT] || GameState::gameStateInstance->keys[ROT_RIGHT]) {
-        float delta = (faces[faceIndex] - GameState::gameStateInstance->angle)/2;
-        GameState::gameStateInstance->angle += delta; 
-        draw3DScene();
-        std::this_thread::sleep_for(std::chrono::milliseconds(250));
+    // Calculate the lerp factor (0.0 to 1.0)
+    float lerpFactor = 0.5f; // Adjust as needed
+
+    // Calculate the new angle using linear interpolation
+    float newAngle = std::lerp(GameState::gameStateInstance->angle, faces[faceIndex], lerpFactor);
+
+    // Update the angle
+    GameState::gameStateInstance->angle = newAngle;
+
+    // Perform other actions (e.g., draw3DScene())
+    draw3DScene();
+
+    // Introduce a delay
+    std::this_thread::sleep_for(std::chrono::milliseconds(250));
+
         //a little smother feeling way of turning the character... 
 
     }

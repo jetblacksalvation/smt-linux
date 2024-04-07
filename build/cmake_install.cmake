@@ -1,4 +1,4 @@
-# Install script for directory: /home/jetblack/workspace-vscode/real-smt-linux
+# Install script for directory: /home/jetblack/workspace-vscode/smt-linux
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -44,7 +44,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/jetblack/workspace-vscode/real-smt-linux/build/_deps/sfml-build/cmake_install.cmake")
+  include("/home/jetblack/workspace-vscode/smt-linux/build/_deps/sfml-build/cmake_install.cmake")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
@@ -54,7 +54,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/CMakeSFMLProject"
          RPATH "")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "/home/jetblack/workspace-vscode/real-smt-linux/build/bin/CMakeSFMLProject")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "/home/jetblack/workspace-vscode/smt-linux/bin/CMakeSFMLProject")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/CMakeSFMLProject" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/CMakeSFMLProject")
     if(CMAKE_INSTALL_DO_STRIP)
@@ -71,5 +71,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/jetblack/workspace-vscode/real-smt-linux/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/jetblack/workspace-vscode/smt-linux/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

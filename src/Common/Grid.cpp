@@ -2,7 +2,10 @@
 RoamingState::GridHelper::GridHelper(RoamingState* state) {
     this->gridData = { { 1,1,1,1,1,1,1 },
     { 1,0,0,0,0,0,1 },
-    { 1,1,1,1,1,1,1 } };
+    { 1,1,0,0,1,1,1 },
+    { 1,1,0,0,1,1,1 } ,
+    { 1,1,1,0,1,1,1 } ,
+    { 1,1,1,1,1,1,1 }  };
     const int scaleFactor = 100;
     WorldHelper::T_WorldObjects& allWorldShapes = Game::gameInstance->worldData.worldObjects;
     std::cout << "Populating world...\n";
