@@ -153,7 +153,7 @@ void RoamingState::HandleState() {
 
     }
     if (GameState::gameStateInstance->keys[ROT_RIGHT]){
-    
+        //new comment
         (this->faceIndex + 1 > 3) ? faceIndex = 0 : faceIndex++;
         //delta of this 
     }
