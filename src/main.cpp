@@ -1,5 +1,5 @@
 
-#include "Common/Common.hpp"
+#include "Common/Game.hpp"
 int main()
 {
 	std::cout<<"hello world\n";

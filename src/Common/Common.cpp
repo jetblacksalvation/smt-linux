@@ -1,58 +1,42 @@
 #include "Common.hpp"
 #include "SFML/Graphics.hpp"
+
 Game::TWindowPtr Game::window;
-Game::TGameInstance Game::gameInstance; // helper obj, its so that game state can grab whatever is needed.
+std::shared_ptr<IPlayerState> Game::playerState;
+Game::TGameInstance Game::gameInstance;
 
-
-
-Game::Game() {
-    //instanceList.push_back(std::make_shared<Game>(this));
+Game::Game()
+{
     gameInstance = std::shared_ptr<Game>(this);
-    
-    
 
-    if (!window) {
-        window = std::make_unique< sf::RenderWindow>();
-        (*window).create({ 800,800 }, "Shin Megami Tensei");
-        // Check if window creation was successful
-        if (!window) {
-            
-            // Handle the error, perhaps throw an exception or exit the program
-        }
+    if (!window)
+    {
+        window = std::make_unique<sf::RenderWindow>();
+        window->create({800, 800}, "Shin Megami Tensei");
     }
-    else {
+    else
+    {
         // Handle the case where the window is already created
     }
+    std::cout << "created roaming state\n";
+    playerState = std::shared_ptr<RoamingState>();
 
-    GameState inst{};
+    PlayerStateRegistrar::currentState = playerState;
 }
-void Game::run() {
-    //WorldHelper::T_PrimitiveShape points({ sf::Vector2f{-50,50}, sf::Vector2f{50, 50}, sf::Vector2f{-50,50 }, sf::Vector2f{-50,150},  sf::Vector2f{50,150},sf::Vector2f{50,50 } });//last index is so that lines can wrap back to start 
-    
-    std::cout << "Hello Rotation!\n";
+void Game::run()
+{
 
     window->setFramerateLimit(60);
-    //square 
 
-
-
-
-    std::cout << "Hello Rotation!\n";
     auto windowSize = window->getSize();
 
-    while (window->isOpen()) {
+    while (window->isOpen())
+    {
 
+        // eventually the movement will be changed, for now this will do.
 
-        //eventually the movement will be changed, for now this will do.
-            
-
-            
         window->clear(sf::Color::White);
-        //draw3DScene(this->worldData.worldObjects, angle, playerPos);
-        std::cout<<GameState::playerStateInstance<<" is the inst <<\n";
-        GameState::playerStateInstance->HandleState();
-
-
+        PlayerStateRegistrar::currentState->HandleState();
     }
     exit(0);
 }

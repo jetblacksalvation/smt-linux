@@ -1,46 +1,56 @@
+#ifndef GameState
+#define GameState 1
+#include <cmath>
 
-#pragma once
-#include "Common.hpp"
-#include "CommonMath.hpp"
+
 #include <fstream> 
-#include <chrono>
 #include <thread>
 
 #include <typeindex>
 #include <type_traits>
-#include <chrono>
-#include <SFML/Graphics.hpp>
 #include <memory>
 #include <iostream>
+#include <SFML/Graphics.hpp> 
 //apparently the fastest hash map in c++ stl
 //eventually add scenario interpreter
 #include <unordered_map>
-class IPlayerState;
 /*
     wrapps TplayerState... game only invokes player state, ill clean up what is and isn't used later.
+    this object persists beyond this scope, within PlayerStateRegistrar
+
 */
-class GameState : public std::enable_shared_from_this<GameState>
-{
-public: 
-    typedef std::shared_ptr<GameState>      TGameStateInstance; 
-    typedef std::shared_ptr<IPlayerState>   TPlayerState;
-
-    static TGameStateInstance               gameStateInstance;
-    static TPlayerState                     playerStateInstance; 
+class IPlayerState: public std::enable_shared_from_this<IPlayerState> {
+public:
+	//variables 
+    bool blockInput = false;
     static sf::Event event;
-    
-    static bool keys[6];
+
+    static inline bool keys[6] = {0,0,0,0,0,0};
     static float angle; 
+    static const float constexpr magicAngleOffset = M_PI / 4; //exists because of how i render... keep this in mind
 
+    IPlayerState() {
+        isLoaded = false;
+    };
 
-    GameState();
+    virtual ~IPlayerState() = default;
+     
+	virtual void HandleState() {
+		static_assert("ERR: This object has no defined virtual override for HanldeState!\n");
+	}
 
+    virtual void OnLoad() {
+        static_assert("ERR: This object has no defined virtual override for OnLoad!\n");
 
-
+    };
+    bool isLoaded;
+    
+private:
 
 };
 class PlayerStateRegistrar{
 public:
+    static inline std::shared_ptr<IPlayerState> currentState;
     template <typename T, typename = void>
     static void registerInstance(const std::shared_ptr<T>& instance) {
 
@@ -77,13 +87,13 @@ public:
 
             std::shared_ptr<IPlayerState> v  = PlayerStateRegistrar::getInstance<T>();
 
-            GameState::playerStateInstance = v;
+            currentState = v;
 
         }
         catch (...) {
             PlayerStateRegistrar::registerInstance(std::make_shared<T>());
             std::cout << "Registered " << typeid(T).name() << std::endl; 
-            GameState::playerStateInstance = instances[typeid(T)];
+            currentState = instances[typeid(T)];
         }
 
     }
@@ -92,7 +102,7 @@ public:
     static void HandleChangeState(U&& value) {
         std::cout << "Changing global state with value...\n";
         PlayerStateRegistrar::registerInstance(std::make_shared<std::remove_reference_t<U>>(std::forward<U>(value)));
-        GameState::playerStateInstance = PlayerStateRegistrar::getInstance<std::remove_reference_t<U>>();
+        currentState = PlayerStateRegistrar::getInstance<std::remove_reference_t<U>>();
     }
     static void PrintInfo() {
         for (auto it : instances) {
@@ -102,35 +112,13 @@ public:
 private:
     static std::unordered_map<std::type_index, std::shared_ptr<IPlayerState>> instances;
 };
+#define GetInstance(arg) *(arg*)PlayerStateRegistrar::getInstance<arg>().get()
 
 
 
 
 
-class IPlayerState: public std::enable_shared_from_this<IPlayerState> {
-public:
-	//variables 
-    bool blockInput = false;
 
-    IPlayerState() {
-        isLoaded = false;
-    };
-
-    virtual ~IPlayerState() = default;
-     
-	virtual void HandleState() {
-		static_assert("ERR: This object has no defined virtual override for HanldeState!\n");
-	}
-
-    virtual void OnLoad() {
-        static_assert("ERR: This object has no defined virtual override for OnLoad!\n");
-
-    };
-    bool isLoaded;
-    
-private:
-
-};
 
 
 
@@ -176,5 +164,7 @@ public:
     sf::Vector2u windowSize ;
 
 };
+#include "Common.hpp"
 
 #include "GameMenu.hpp"
+#endif

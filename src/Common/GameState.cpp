@@ -1,15 +1,13 @@
 #include "GameState.hpp"
 // re-decs
-#include <cmath>
+
+#include "CommonMath.hpp"
+#include "Common.hpp"
 std::unordered_map<std::type_index, std::shared_ptr<IPlayerState>> PlayerStateRegistrar::instances;
 
-GameState::TGameStateInstance GameState::gameStateInstance;
-GameState::TPlayerState GameState::playerStateInstance;
-bool GameState::keys[];
-float GameState::angle;
+sf::Event IPlayerState::event;
+float IPlayerState::angle  = 0; 
 
-sf::Event GameState::event;
-// funcs
 void RoamingState::setGridPos(const sf::Vector2<uint32_t> &&vec)
 {
     setGridPos(vec);
@@ -30,22 +28,11 @@ void RoamingState::OnLoad()
     // a scale factor of ten seems to work ?
 }
 
-GameState::GameState()
-{
-    std::cout << "GameState Built\n";
-    GameState::gameStateInstance = std::shared_ptr<GameState>(this);
-
-    // default state to roaming, this will be changed later
-
-    for (auto &k : keys)
-    {
-        k = false;
-    }
-    angle = M_PI / 4;
-    // PlayerStateRegistrar::registerInstance<RoamingState>();
-    PlayerStateRegistrar::HandleChangeState<RoamingState>();
-    // GameState::playerStateInstance = PlayerStateRegistrar::getInstance<RoamingState>();
-}
+// GameState::GameState()
+// {
+//     angle = M_PI / 4;
+//     PlayerStateRegistrar::HandleChangeState<RoamingState>();
+// }
 RoamingState::RoamingState()
 {
     std::cout << "Roaming State Instantiated!\n";
@@ -58,20 +45,19 @@ RoamingState::RoamingState()
 void RoamingState::MovePlayer()
 {
     std::cout << faceIndex << " is face index\n";
-
     sf::Vector2u newPosition = gridPos;
 
     switch (faceIndex)
     {
     case 0:
         newPosition.y += 1;
-        break;    if (GameState::gameStateInstance->angle < 0.0)
+        break;    if (IPlayerState::angle < 0.0)
     {
-        GameState::gameStateInstance->angle += 2 * M_PI;
+        IPlayerState::angle += 2 * M_PI;
     }
-    else if (GameState::gameStateInstance->angle >= 2 * M_PI)
+    else if (IPlayerState::angle >= 2 * M_PI)
     {
-        GameState::gameStateInstance->angle -= 2 * M_PI;
+        IPlayerState::angle -= 2 * M_PI;
     }
         break;
     case 3:
@@ -94,19 +80,13 @@ void RoamingState::MovePlayer()
 void RoamingState::HandleState()
 {
 
-    // std::cout << allWorldShapes.size() << " is size\n";
 
-    // std::cout << "The P_angle = " << GameState::gameStateInstance->angle << std::endl;
-    // std::cout << RoamingState::ppos.x << ", " << RoamingState::ppos.y << "\n";
-    const std::clock_t c_start = std::clock();
-
-    auto t_start = std::chrono::high_resolution_clock::now();
 
     // do something
 
-    while (Game::gameInstance->window->pollEvent(GameState::event) && !this->blockInput)
+    while (Game::gameInstance->window->pollEvent(IPlayerState::event) && !this->blockInput)
     {
-        if (GameState::event.type == GameState::event.Closed)
+        if (IPlayerState::event.type == IPlayerState::event.Closed)
         {
             std::cout << "Closing\n";
             Game::gameInstance->window->close();
@@ -127,18 +107,18 @@ void RoamingState::HandleState()
             return;
         }
 
-        GameState::gameStateInstance->keys[ROT_RIGHT] = sf::Keyboard::isKeyPressed(sf::Keyboard::E);
-        GameState::gameStateInstance->keys[ROT_LEFT] = sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
+        IPlayerState::keys[ROT_RIGHT] = sf::Keyboard::isKeyPressed(sf::Keyboard::E);
+        IPlayerState::keys[ROT_LEFT] = sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
 
-        GameState::gameStateInstance->keys[UP] = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
-        GameState::gameStateInstance->keys[LEFT] = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
-        GameState::gameStateInstance->keys[DOWN] = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
-        GameState::gameStateInstance->keys[RIGHT] = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
+        IPlayerState::keys[UP] = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
+        IPlayerState::keys[LEFT] = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
+        IPlayerState::keys[DOWN] = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
+        IPlayerState::keys[RIGHT] = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
     }
     // float offset = M_PI / 4;
     // int face = 0;
     // float faces[4] = { 0 + offset, (M_PI / 2) + offset, (M_PI)+offset, 3 * (M_PI / 2) + offset };
-    if (GameState::gameStateInstance->keys[UP])
+    if (IPlayerState::keys[UP])
     {
         std::cout << gridPos.x << ", " << gridPos.y << std::endl;
 
@@ -155,11 +135,11 @@ void RoamingState::HandleState()
     }
     // offset anlge by M_PI
 
-    if (GameState::gameStateInstance->keys[ROT_LEFT])
+    if (IPlayerState::keys[ROT_LEFT])
     {
         (this->faceIndex - 1 < 0) ? faceIndex = 3 : this->faceIndex--;
     }
-    if (GameState::gameStateInstance->keys[ROT_RIGHT])
+    if (IPlayerState::keys[ROT_RIGHT])
     {
         // new comment
         (this->faceIndex + 1 > 3) ? faceIndex = 0 : faceIndex++;
@@ -167,31 +147,31 @@ void RoamingState::HandleState()
     }
     std::cout << "INDEX = " << faceIndex << std::endl;
 
-if (GameState::gameStateInstance->keys[ROT_LEFT] || GameState::gameStateInstance->keys[ROT_RIGHT]) {
+if (IPlayerState::keys[ROT_LEFT] || IPlayerState::keys[ROT_RIGHT]) {
     // Calculate the midpoint angle
-    float midpointAngle = (GameState::gameStateInstance->angle + faces[faceIndex]) / 2.0f;
+    float midpointAngle = (IPlayerState::angle + faces[faceIndex]) / 2.0f;
 
     // Perform other actions (e.g., draw3DScene())
 
     // Update the angle
-    GameState::gameStateInstance->angle = midpointAngle;
+    IPlayerState::angle = midpointAngle;
     draw3DScene();
     std::this_thread::sleep_for(std::chrono::milliseconds(175));
-    GameState::gameStateInstance->keys[ROT_RIGHT] = false;
-    GameState::gameStateInstance->keys[ROT_LEFT]  = false; 
+    IPlayerState::keys[ROT_RIGHT] = false;
+    IPlayerState::keys[ROT_LEFT]  = false; 
 }
 
-    if (GameState::gameStateInstance->angle < 0.0)
+    if (IPlayerState::angle < 0.0)
     {
-        GameState::gameStateInstance->angle += 2 * M_PI;
+        IPlayerState::angle += 2 * M_PI;
     }
-    else if (GameState::gameStateInstance->angle >= 2 * M_PI)
+    else if (IPlayerState::angle >= 2 * M_PI)
     {
-        GameState::gameStateInstance->angle -= 2 * M_PI;
+        IPlayerState::angle -= 2 * M_PI;
     }
     // std::cout << "IN ROAMING\n";
     for(auto angle : faces){
-        if(GameState::gameStateInstance->angle != angle){
+        if(IPlayerState::angle != angle){
             std::cout<<angle <<":: isn't angle;\n";
         }
         else{
@@ -199,7 +179,7 @@ if (GameState::gameStateInstance->keys[ROT_LEFT] || GameState::gameStateInstance
 
         }
     }
-    GameState::gameStateInstance->angle = faces[faceIndex];
+    IPlayerState::angle = faces[faceIndex];
 
     draw3DScene();
 
@@ -212,7 +192,7 @@ void RoamingState::draw3DScene()
     Game::TWindowPtr &window = game.window;
 
     int rayNum = 100;
-    auto angle = GameState::gameStateInstance->angle;
+    auto angle = IPlayerState::angle;
 
     for (int i = 0; i <= rayNum; ++i)
     {
