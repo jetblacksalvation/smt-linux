@@ -51,14 +51,12 @@ void RoamingState::MovePlayer()
     {
     case 0:
         newPosition.y += 1;
-        break;    if (IPlayerState::angle < 0.0)
-    {
-        IPlayerState::angle += 2 * M_PI;
-    }
-    else if (IPlayerState::angle >= 2 * M_PI)
-    {
-        IPlayerState::angle -= 2 * M_PI;
-    }
+        break;  
+    case 1:
+        newPosition.x -= 1;
+        break;
+    case 2:
+        newPosition.y -= 1; 
         break;
     case 3:
         newPosition.x += 1;
@@ -150,13 +148,15 @@ void RoamingState::HandleState()
 if (IPlayerState::keys[ROT_LEFT] || IPlayerState::keys[ROT_RIGHT]) {
     // Calculate the midpoint angle
     float midpointAngle = (IPlayerState::angle + faces[faceIndex]) / 2.0f;
-
+    Game& game = *Game::gameInstance.get();
+    Game::TWindowPtr& window = game.window;
     // Perform other actions (e.g., draw3DScene())
 
     // Update the angle
     IPlayerState::angle = midpointAngle;
     draw3DScene();
     std::this_thread::sleep_for(std::chrono::milliseconds(175));
+    window->clear(sf::Color::White);
     IPlayerState::keys[ROT_RIGHT] = false;
     IPlayerState::keys[ROT_LEFT]  = false; 
 }

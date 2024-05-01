@@ -19,7 +19,7 @@ Game::Game()
         // Handle the case where the window is already created
     }
     std::cout << "created roaming state\n";
-    playerState = std::shared_ptr<RoamingState>();
+    playerState = std::make_shared<RoamingState>();
 
     PlayerStateRegistrar::currentState = playerState;
 }
