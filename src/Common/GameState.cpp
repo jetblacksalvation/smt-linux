@@ -83,10 +83,8 @@ void RoamingState::HandleState()
             std::cin >> playerPos.x;
             std::cin >> playerPos.y;
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Tab))
         {
-            // show 2d representation for the world...
-            // it is seperate state, for menu. for now its debug
             PlayerStateRegistrar::HandleChangeState<MenuState>();
             return;
         }

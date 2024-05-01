@@ -1,25 +1,16 @@
 #ifndef GameState
 #define GameState 1
 #include <cmath>
-
 #define M_PI           3.14159265358979323846  /* pi */
-
 #include <fstream> 
 #include <thread>
-
 #include <typeindex>
 #include <type_traits>
 #include <memory>
 #include <iostream>
 #include <SFML/Graphics.hpp> 
-//apparently the fastest hash map in c++ stl
-//eventually add scenario interpreter
 #include <unordered_map>
-/*
-    wrapps TplayerState... game only invokes player state, ill clean up what is and isn't used later.
-    this object persists beyond this scope, within PlayerStateRegistrar
 
-*/
 class IPlayerState: public std::enable_shared_from_this<IPlayerState> {
 public:
 	//variables 
@@ -77,7 +68,7 @@ public:
             return (it->second);
         }
         else {
-            throw std::runtime_error("ERR: getInstance could not find type " + std::string(typeid(T).name()) + "!");
+            throw std::runtime_error(std::string("ERR: getInstance could not find type ") + std::string(typeid(T).name()) + "!");
 
         }
     }
@@ -91,7 +82,7 @@ public:
             currentState = v;
 
         }
-        catch (...) {
+        catch (const std::runtime_error& error) {
             PlayerStateRegistrar::registerInstance(std::make_shared<T>());
             std::cout << "Registered " << typeid(T).name() << std::endl; 
             currentState = instances[typeid(T)];
@@ -103,7 +94,13 @@ public:
     static void HandleChangeState(U&& value) {
         std::cout << "Changing global state with value...\n";
         PlayerStateRegistrar::registerInstance(std::make_shared<std::remove_reference_t<U>>(std::forward<U>(value)));
-        currentState = PlayerStateRegistrar::getInstance<std::remove_reference_t<U>>();
+        try {
+            currentState = PlayerStateRegistrar::getInstance<std::remove_reference_t<U>>();
+
+        }
+        catch (const std::runtime_error& error) {
+
+        }
     }
     static void PrintInfo() {
         for (auto it : instances) {

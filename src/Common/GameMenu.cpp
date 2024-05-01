@@ -31,22 +31,9 @@ void MenuState::HandleState()
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
         {
-            auto &playerData = *(RoamingState *)PlayerStateRegistrar::getInstance<RoamingState>().get();
-            std::cout << playerData.faceIndex << " : index\n";
-            std::cout << playerData.playerPos.x << ", " << playerData.playerPos.y << " is player pos" << std::endl;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
-        {
-            // auto& playerData = *(RoamingState*)PlayerStateRegistrar::getInstance<RoamingState>().get();
-            // sf::Vector2u update;
-            // std::cin >> update.x;
-            // std::cin >> update.y;
-            // update.y++;
-            // update.x *= 100;
-            // update.y *= 100;
-            // std::cin.clear();
-
-            // playerData.setGridPos({ update });
+            //auto &playerData = *(RoamingState *)PlayerStateRegistrar::getInstance<RoamingState>().get();
+            //std::cout << playerData.faceIndex << " : index\n";
+            //std::cout << playerData.playerPos.x << ", " << playerData.playerPos.y << " is player pos" << std::endl;
         }
         IPlayerState::keys[UP]        = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
         IPlayerState::keys[LEFT]      = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
@@ -55,49 +42,10 @@ void MenuState::HandleState()
         IPlayerState::keys[ROT_LEFT]  = sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
         IPlayerState::keys[ROT_RIGHT] = sf::Keyboard::isKeyPressed(sf::Keyboard::E);
     }
-    if (IPlayerState::keys[UP])
-    {
-        for (auto &it : worldData.worldObjects)
-        {
-            for (auto &vec : it)
-            {
-                vec.x += cosf(angle - (3 * (M_PI / 4))) * 2.5f;
-                vec.y += sinf(angle - (3 * (M_PI / 4))) * 2.5f;
-            }
-        }
-    }
-    if (IPlayerState::keys[ROT_LEFT])
-    {
-        IPlayerState::angle -= 0.05;
-    }
-    if (IPlayerState::keys[ROT_RIGHT])
-    {
-        IPlayerState::angle += 0.05;
-    }
-    if (IPlayerState::angle < 0.0)
-    {
-        IPlayerState::angle += 2 * M_PI;
-    }
-    else if (IPlayerState::angle >= 2 * M_PI)
-    {
-        IPlayerState::angle -= 2 * M_PI;
-    }
-    window->clear(sf::Color::White);
-    auto &playerData = *(RoamingState *)PlayerStateRegistrar::getInstance<RoamingState>().get();
 
-    for (unsigned int x = 0; x < playerData.gridData.gridData.size(); x++)
-    {
-        for (unsigned int y = 0; y < playerData.gridData.gridData[x].size(); y++)
-        {
-            if (playerData.gridPos == sf::Vector2u{x, y})
-            {
-                std::cout << "p ";
-            }
-            else
-                std::cout << playerData.gridData.gridData[x][y] << ' ';
-        }
-        std::cout << std::endl;
-    }
+    window->clear(sf::Color::White);
+
+    //auto &playerData = *(RoamingState *)PlayerStateRegistrar::getInstance<RoamingState>().get();
     draw2DScene();
 }
 
