@@ -1,4 +1,5 @@
-
+#ifndef GAMESTATE_HPP
+#define GAMESTATE_HPP
 #include <cmath>
 #define M_PI           3.14159265358979323846  /* pi */
 #include <fstream> 
@@ -22,7 +23,7 @@ public:
         isLoaded = false;
     };
 
-    Renderer::TStateEventVec myEventHanlders {};
+    // Renderer::TStateEventVec myEventHanlders {};
 
     virtual ~IPlayerState() = default;
      
@@ -154,3 +155,4 @@ public:
 };
 
 #include "GameMenu.hpp"
+#endif

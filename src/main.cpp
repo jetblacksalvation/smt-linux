@@ -1,7 +1,7 @@
-#include "Includes/Renderer.hpp"
+#include "IRenderer/Renderer.hpp"
 
-#include "Includes/CommonMath.hpp"
-#include "Includes/Common.hpp"
+#include "CommonMath.hpp"
+#include "Common.hpp"
 int main()
 {
 	std::cout<<"hello world\n";

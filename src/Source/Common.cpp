@@ -1,7 +1,7 @@
 #include "SFML/Graphics.hpp"
-#include "../Includes/Renderer.hpp"
-#include "../Includes/GameState.hpp"
-
+#include "../Includes/IRenderer/Renderer.hpp"
+#include "../Includes/IState/GameState.hpp"
+#include "../Includes/Common.hpp"
 std::shared_ptr<IPlayerState> Game::playerState;
 Game::TGameInstance Game::gameInstance;
 

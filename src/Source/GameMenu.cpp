@@ -1,5 +1,6 @@
-#include "GameState.hpp"
-
+#include "../Includes/GameMenu.hpp"
+#include "../Includes/IRenderer/Renderer.hpp"
+#include "../Includes/Common.hpp"
 MenuState::MenuState()
 {
     std::cout << "Menu state created\n";

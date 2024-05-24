@@ -1,4 +1,6 @@
-#include "GameState.hpp"
+#include "../Includes/IState/GameState.hpp"
+#include "../Includes/IRenderer/Renderer.hpp"
+#include "../Includes/Common.hpp"
 
 std::unordered_map<std::type_index, std::shared_ptr<IPlayerState>> PlayerStateRegistrar::instances;
 
@@ -23,13 +25,14 @@ void RoamingState::OnLoad()
 
 }
 
-Renderer::TEventFunction function = [](sf::Event event) {
+IEvent::TEventFunction function = [](sf::Event event) {
     auto player = GetInstance(RoamingState);
 
     if (event.type == sf::Event::Resized)
     {
         // adjust the viewport when the window is resized
-        glViewport(0, 0, event.size.width, event.size.height);
+        
+        //glViewport(0, 0, event.size.width, event.size.height);
     }
     if (IPlayerState::event.type == IPlayerState::event.Closed)
     {
@@ -54,7 +57,7 @@ Renderer::TEventFunction function = [](sf::Event event) {
 RoamingState::RoamingState()
 {
     
-    myEventHanlders = { Renderer::TConditionalFunc{function, shared_from_this()}};
+    auto myEventHanlders = { IEvent::TConditionalFunc{function, shared_from_this()}};
 
 
     std::cout << "Roaming State Instantiated!\n";

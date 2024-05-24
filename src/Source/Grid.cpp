@@ -1,4 +1,5 @@
-#include "GameState.hpp"
+#include "../Includes/IState/GameState.hpp"
+#include "../Includes/Common.hpp"
 RoamingState::GridHelper::GridHelper(RoamingState* state) {
     this->gridData = { { 1,1,1,1,1,1,1 },
     { 1,0,0,0,0,0,1 },
