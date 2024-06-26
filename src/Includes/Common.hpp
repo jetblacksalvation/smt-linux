@@ -2,8 +2,8 @@
 #include <iostream>
 #include <memory>
 #include <functional>
-#include "../Includes/CommonMath.hpp"
-#include "../Includes/IState/GameState.hpp"
+#include "CommonMath.hpp"
+#include "./IState/GameState.hpp"
 enum DIRECTIONS { LEFT, RIGHT, UP, DOWN, ROT_LEFT, ROT_RIGHT }; 
 
 class Game:public std::enable_shared_from_this<Game>{

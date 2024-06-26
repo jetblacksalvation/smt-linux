@@ -1,5 +1,6 @@
 #ifndef RENDERER
 #define RENDERER
+
 #include <functional>
 #include <memory>
 #include <SFML/Graphics.hpp>
@@ -20,7 +21,10 @@ public:
 		
 		IEvent::_stateEvents = vec;
 	}
-	static inline TStateEventVec GetStateEventVec(){};
+	static inline TStateEventVec GetStateEventVec()
+	{
+		return {};
+	};
 	static inline sf::Event      event;
 
 private:

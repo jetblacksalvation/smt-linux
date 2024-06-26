@@ -1,7 +1,7 @@
 #include "../Includes/IState/GameState.hpp"
 #include "../Includes/IRenderer/Renderer.hpp"
 #include "../Includes/Common.hpp"
-
+#include "GameMenu.hpp"
 std::unordered_map<std::type_index, std::shared_ptr<IPlayerState>> PlayerStateRegistrar::instances;
 
 sf::Event IPlayerState::event;
@@ -57,7 +57,7 @@ IEvent::TEventFunction function = [](sf::Event event) {
 RoamingState::RoamingState()
 {
     
-    auto myEventHanlders = { IEvent::TConditionalFunc{function, shared_from_this()}};
+    //auto myEventHanlders = { IEvent::TConditionalFunc{function, shared_from_this()}};
 
 
     std::cout << "Roaming State Instantiated!\n";

@@ -19,26 +19,26 @@ if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
 endif()
 
 
-
-
-
 # Collect all source and header files
 set(SOURCE_FILES
-    src/main.cpp
-    src/Common/Common.cpp
-    src/Common/CommonMath.cpp
-    src/Common/GameMenu.cpp
-    src/Common/GameState.cpp
-    src/Common/Grid.cpp
+
+./src/main.cpp
+./src/Source/Common.cpp
+./src/Source/CommonMath.cpp
+./src/Source/EncounterState.cpp
+./src/Source/GameMenu.cpp
+./src/Source/GameState.cpp
+./src/Source/Grid.cpp
+./src/Source/Renderer.cpp
 )
 
 set(HEADER_FILES
-    src/Common/Common.hpp
-    src/Common/CommonMath.hpp
-    src/Common/GameMenu.hpp
-    src/Common/GameState.hpp
-    src/Common/EncounterState.hpp
-    src/Common/Game.hpp
+    src/Includes/Common.hpp
+    src/Includes/CommonMath.hpp
+    src/Includes/EncounterState.hpp
+    src/Includes/GameMenu.hpp
+    src/Includes/IRenderer/Renderer.hpp
+    src/Includes/IState/GameState.hpp
 )
 
 # Add the main executable
@@ -49,7 +49,7 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
 endif()
 
 # Include subdirectory for Common library
-include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/src/Includes)
 
 find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
 target_link_libraries(CMakeSFMLProject PRIVATE sfml-system sfml-network sfml-graphics sfml-window)

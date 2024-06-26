@@ -10,6 +10,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp> 
 #include <unordered_map>
+
 class IPlayerState: public std::enable_shared_from_this<IPlayerState> {
 public:
 	//variables 
@@ -73,7 +74,7 @@ public:
 
         }
     }
-    template<typename T, typename = std::enable_if_t<std::is_default_constructible<T>::value>>
+    template<typename T, typename = std::enable_if_t<std::is_base_of<IPlayerState,T>::value && std::is_default_constructible<T>::value>>
     static void HandleChangeState() {
         std::cout << "Changing global state...\n";
         try {
@@ -154,5 +155,4 @@ public:
 
 };
 
-#include "GameMenu.hpp"
 #endif

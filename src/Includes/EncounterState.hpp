@@ -1,6 +1,6 @@
 #ifndef EncounterStateDef 
 #define EncounterStateDef 1 
-#include "GameState.hpp"
+#include "./IState/GameState.hpp"
 
 class EncounterState : public IPlayerState {
 public:
