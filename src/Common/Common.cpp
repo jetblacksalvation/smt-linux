@@ -1,5 +1,5 @@
 #include "Common.hpp"
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 
 Game::TWindowPtr Game::window;
 std::shared_ptr<IPlayerState> Game::playerState;

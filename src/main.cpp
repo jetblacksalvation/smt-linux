@@ -4,8 +4,6 @@ int main()
 {
 	std::cout<<"hello world\n";
 	// MAIN IS GAME::RUN
-	Game game{}; 
+	Game game; 
 	game.run();
-
-
 }

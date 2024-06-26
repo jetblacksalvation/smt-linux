@@ -5,7 +5,7 @@ MenuState::MenuState()
 {
     std::cout << "Menu state created\n";
     windowSize = Game::gameInstance->window->getSize();
-    if (!font.loadFromFile("arial.ttf"))
+    if (!font.loadFromFile(std::string(ASSET_PATH) + "arial.ttf"))
     {
         std::cerr << "Failed to load default font!" << std::endl;
     }
@@ -70,7 +70,7 @@ void MenuState::draw2DScene()
 
     // Load default font
     sf::Font font;
-    if (!font.loadFromFile("arial.ttf"))
+    if (!font.loadFromFile(std::string(ASSET_PATH) + "arial.ttf"))
     {
         std::cerr << "Failed to load default font!" << std::endl;
     }

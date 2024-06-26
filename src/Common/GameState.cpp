@@ -29,8 +29,7 @@ RoamingState::RoamingState()
 {
     std::cout << "Roaming State Instantiated!\n";
     gridData = GridHelper(this);
-
-    texture.loadFromFile("brickWall.png");
+    texture.loadFromFile(std::string(ASSET_PATH) + "brickWall.png");
     sprite.setTexture(texture);
     OnLoad();
 }
