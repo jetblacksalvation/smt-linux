@@ -11,7 +11,7 @@ public:
     };
     class IEncounterEntry{
 
-        inline  static  const char* enemy_src_path_ = "./enemy_src";
+        inline static const char* enemy_src_path_ = "./enemy_src";
 
 
     };          

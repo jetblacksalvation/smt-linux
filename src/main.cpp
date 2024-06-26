@@ -1,5 +1,7 @@
+#include "IRenderer/Renderer.hpp"
 
-#include "Common/Game.hpp"
+#include "CommonMath.hpp"
+#include "Common.hpp"
 int main()
 {
 	std::cout<<"hello world\n";

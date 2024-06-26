@@ -1,6 +1,7 @@
-#include "GameState.hpp"
-#include "CommonMath.hpp"
-#include "Common.hpp"
+#include "../Includes/IState/GameState.hpp"
+#include "../Includes/IRenderer/Renderer.hpp"
+#include "../Includes/Common.hpp"
+
 std::unordered_map<std::type_index, std::shared_ptr<IPlayerState>> PlayerStateRegistrar::instances;
 
 sf::Event IPlayerState::event;
@@ -20,13 +21,45 @@ void RoamingState::OnLoad()
 {
     setGridPos({1, 2});
 
-    windowSize = Game::gameInstance->window->getSize();
+    windowSize = Renderer::window->getSize();
 
 }
 
+IEvent::TEventFunction function = [](sf::Event event) {
+    auto player = GetInstance(RoamingState);
+
+    if (event.type == sf::Event::Resized)
+    {
+        // adjust the viewport when the window is resized
+        
+        //glViewport(0, 0, event.size.width, event.size.height);
+    }
+    if (IPlayerState::event.type == IPlayerState::event.Closed)
+    {
+        std::cout << "Closing\n";
+        Renderer::window->close();
+        exit(0);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::O))
+    {
+        std::cout << "ECHO PPOS\n";
+        std::cout << "current pos = " << player.playerPos.x << ", " << player.playerPos.y << std::endl;
+        std::cin >> player.playerPos.x;
+        std::cin >> player.playerPos.y;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Tab))
+    {
+        PlayerStateRegistrar::HandleChangeState<MenuState>();
+        return;
+    }
+    };
 
 RoamingState::RoamingState()
 {
+    
+    auto myEventHanlders = { IEvent::TConditionalFunc{function, shared_from_this()}};
+
+
     std::cout << "Roaming State Instantiated!\n";
     gridData = GridHelper(this);
     texture.loadFromFile(std::string(ASSET_PATH) + "brickWall.png");
@@ -67,36 +100,6 @@ void RoamingState::MovePlayer()
 
 void RoamingState::HandleState()
 {
-    while (Game::gameInstance->window->pollEvent(IPlayerState::event) && !this->blockInput)
-    {
-        if (IPlayerState::event.type == IPlayerState::event.Closed)
-        {
-            std::cout << "Closing\n";
-            Game::gameInstance->window->close();
-            abort();
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::O))
-        {
-            std::cout << "ECHO PPOS\n";
-            std::cout << "current pos = " << playerPos.x << ", " << playerPos.y << std::endl;
-            std::cin >> playerPos.x;
-            std::cin >> playerPos.y;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Tab))
-        {
-            PlayerStateRegistrar::HandleChangeState<MenuState>();
-            return;
-        }
-
-        IPlayerState::keys[ROT_RIGHT] = sf::Keyboard::isKeyPressed(sf::Keyboard::E);
-        IPlayerState::keys[ROT_LEFT] = sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
-
-        IPlayerState::keys[UP] = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
-        IPlayerState::keys[LEFT] = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
-        IPlayerState::keys[DOWN] = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
-        IPlayerState::keys[RIGHT] = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
-    }
-
     if (IPlayerState::keys[UP])
     {
         MovePlayer();
@@ -113,14 +116,16 @@ void RoamingState::HandleState()
     }
 
     if (IPlayerState::keys[ROT_LEFT] || IPlayerState::keys[ROT_RIGHT]) {
-        float midpointAngle = (IPlayerState::angle + faces[faceIndex]) / 2.0f;
-        Game& game = *Game::gameInstance.get();
-        Game::TWindowPtr& window = game.window;
+        float midpointAngle          = (IPlayerState::angle + faces[faceIndex]) / 2.0f;
+        Game& game                   = *Game::gameInstance.get();
+        Renderer::TWindowPtr& window = Renderer::window;
+        IPlayerState::angle          = midpointAngle;
 
-        IPlayerState::angle = midpointAngle;
         draw3DScene();
+
         std::this_thread::sleep_for(std::chrono::milliseconds(175));
         window->clear(sf::Color::White);
+        
         IPlayerState::keys[ROT_RIGHT] = false;
         IPlayerState::keys[ROT_LEFT]  = false; 
     }
@@ -144,7 +149,7 @@ void RoamingState::draw3DScene()
 {
     Game &game                                  = *Game::gameInstance.get();
     WorldHelper::T_WorldObjects &allWorldShapes = game.worldData.worldObjects;
-    Game::TWindowPtr &window                    = game.window;
+    Renderer::TWindowPtr &window                = Renderer::window;
 
     int rayNum = 100;
     auto angle = IPlayerState::angle;
@@ -185,10 +190,10 @@ void RoamingState::draw3DScene()
                     float currDistance = std::hypotf(playerPos.x - interceptPoint->x, playerPos.y - interceptPoint->y);
                     if (distance == 0 || currDistance < distance)
                     {
-                        distance = currDistance;
+                        distance        = currDistance;
                         interceptToDraw = *interceptPoint;
-                        p3Closest = p3;
-                        p4Closest = p4;
+                        p3Closest       = p3;
+                        p4Closest       = p4;
                     }
                     delete interceptPoint;
                 }
@@ -203,9 +208,8 @@ void RoamingState::draw3DScene()
             float distanceAlongWall = ((interceptToDraw.x - p3Closest.x) * (wallVector.x / wallLength) + (interceptToDraw.y - p3Closest.y) * (wallVector.y / wallLength));
             int texX                = static_cast<int>((distanceAlongWall / wallLength) * texture.getSize().x);
             float columnHeight      = windowSize.y / (distance /20.0f);
-
-            float columnX = i * (windowSize.x / rayNum);
-            float columnY = (windowSize.y - columnHeight) / 2.0f;
+            float columnX           = i * (windowSize.x / rayNum);
+            float columnY           = (windowSize.y - columnHeight) / 2.0f;
 
             if (columnX + (windowSize.x / rayNum) > windowSize.x)
             {

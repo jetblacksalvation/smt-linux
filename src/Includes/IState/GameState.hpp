@@ -1,5 +1,5 @@
-#ifndef GameState
-#define GameState 1
+#ifndef GAMESTATE_HPP
+#define GAMESTATE_HPP
 #include <cmath>
 #define M_PI           3.14159265358979323846  /* pi */
 #include <fstream> 
@@ -10,11 +10,9 @@
 #include <iostream>
 #include <SFML/Graphics.hpp> 
 #include <unordered_map>
-
 class IPlayerState: public std::enable_shared_from_this<IPlayerState> {
 public:
 	//variables 
-    bool blockInput = false;
     static sf::Event event;
 
     static inline bool keys[6] = {0,0,0,0,0,0};
@@ -24,6 +22,8 @@ public:
     IPlayerState() {
         isLoaded = false;
     };
+
+    // Renderer::TStateEventVec myEventHanlders {};
 
     virtual ~IPlayerState() = default;
      
@@ -35,6 +35,7 @@ public:
         static_assert("ERR: This object has no defined virtual override for OnLoad!\n");
 
     };
+
     bool isLoaded;
     
 private:
@@ -110,15 +111,7 @@ public:
 private:
     static std::unordered_map<std::type_index, std::shared_ptr<IPlayerState>> instances;
 };
-#define GetInstance(arg) *(arg*)PlayerStateRegistrar::getInstance<arg>().get()
-
-
-
-
-
-
-
-
+#define GetInstance(arg) (*(arg*)PlayerStateRegistrar::getInstance<arg>().get())
 
 class RoamingState : public IPlayerState {
 public:
@@ -128,8 +121,6 @@ public:
     //grid position is used to set playerPos... cry about it because its bad. not enough that i remove it though :P
     sf::Texture texture;
     sf::Sprite sprite;
-
-
     sf::Keyboard lastKey; 
 
     float offset = (float)M_PI / 4.F;
@@ -162,7 +153,6 @@ public:
     sf::Vector2u windowSize ;
 
 };
-#include "Common.hpp"
 
 #include "GameMenu.hpp"
 #endif
