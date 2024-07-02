@@ -3,15 +3,9 @@
 #include <windows.h>
 
 #include <iostream>
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+
 //init = { static_cast<OnInit::OnInitFuncT>(&RenderLoop::_InitRenderLoop) };
-void RenderLoop::_RenderLoopMain()
-{
-
-}
-
-void RenderLoop::_InitRenderLoop(OnInit* ptr)
+RenderThread::RenderThread() 
 {
     // Initialize GLFW
     if (!glfwInit()) {
@@ -25,15 +19,15 @@ void RenderLoop::_InitRenderLoop(OnInit* ptr)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Create a windowed mode window and its OpenGL context
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Basic Window", NULL, NULL);
-    if (!window) {
+    this->_window = glfwCreateWindow(800, 600, "Shin Megami Tensei", NULL, NULL);
+    if (!this->_window) {
         std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return;
     }
 
     // Make the window's context current
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(_window);
 
     // Initialize GLEW to setup the OpenGL function pointers
     GLenum glewInitResult = glewInit();
@@ -41,6 +35,14 @@ void RenderLoop::_InitRenderLoop(OnInit* ptr)
         std::cerr << "Failed to initialize GLEW: " << glewGetErrorString(glewInitResult) << std::endl;
         return;
     }
+
+    this->_eventDispatcher = EventDispatcher(this->_window);
+
+}
+
+void RenderLoop::_InitRenderLoop(OnInit* ptr)
+{
+    
 
     // Set the swap interval for the current context (1 means V-Sync is enabled)
     glfwSwapInterval(1);
