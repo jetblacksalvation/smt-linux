@@ -1,20 +1,23 @@
-#include <SFML/Graphics.hpp>
-#include <iostream>
-#include <memory>
+#ifndef COMMON_SMT
+#define COMMON_SMT
+
 #include <functional>
-#include "CommonMath.hpp"
-#include "./IState/GameState.hpp"
-enum DIRECTIONS { LEFT, RIGHT, UP, DOWN, ROT_LEFT, ROT_RIGHT }; 
+#include <vector>
 
-class Game:public std::enable_shared_from_this<Game>{
+class OnInit
+{
 public:
-	typedef std::shared_ptr<Game>			  TGameInstance; 
-	static std::shared_ptr<IPlayerState>	  playerState;
-	static TGameInstance 					  gameInstance;
-	WorldHelper 							  worldData; 
 
+	using OnInitFuncT = void(OnInit*);
+	
+	OnInit(OnInitFuncT);
+	OnInit();
+	void StartInit();
 
-	Game();
-	void run();
+private:
+	using OnInitFuncTWrapper = std::function<OnInitFuncT>;
+	static inline std::vector<OnInitFuncTWrapper> InitList = {};
+
 };
 
+#endif // !COMMON_SMT

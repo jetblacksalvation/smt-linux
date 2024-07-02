@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(CMakeSFMLProject LANGUAGES CXX)
-
+project(ShinMegamiTensei LANGUAGES CXX)
 
 if (POLICY CMP0141)
   cmake_policy(SET CMP0141 NEW)
@@ -18,38 +17,45 @@ if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
         CACHE STRING "")
 endif()
 
-
 # Collect all source and header files
 set(SOURCE_FILES
-
-./src/main.cpp
-./src/Source/Common.cpp
-./src/Source/CommonMath.cpp
-./src/Source/EncounterState.cpp
-./src/Source/GameMenu.cpp
-./src/Source/GameState.cpp
-./src/Source/Grid.cpp
-./src/Source/Renderer.cpp
+    src/Source/main.cpp
+    src/Source/Renderer.cpp
+    src/Source/Common.cpp
 )
 
 set(HEADER_FILES
     src/Includes/Common.hpp
-    src/Includes/CommonMath.hpp
-    src/Includes/EncounterState.hpp
-    src/Includes/GameMenu.hpp
-    src/Includes/IRenderer/Renderer.hpp
-    src/Includes/IState/GameState.hpp
+    src/Includes/Renderer.hpp
 )
 
 # Add the main executable
-add_executable(CMakeSFMLProject "src/main.cpp" ${SOURCE_FILES} ${HEADER_FILES})
+add_executable(ShinMegamiTensei ${SOURCE_FILES} ${HEADER_FILES})
 
+# Set the C++ standard to 23 if CMake version is greater than 3.12
 if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET CMakeSFMLProject PROPERTY CXX_STANDARD 23)
+  set_property(TARGET ShinMegamiTensei PROPERTY CXX_STANDARD 23)
 endif()
 
-# Include subdirectory for Common library
 include_directories(${CMAKE_SOURCE_DIR}/src/Includes)
 
-find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
-target_link_libraries(CMakeSFMLProject PRIVATE sfml-system sfml-network sfml-graphics sfml-window)
+# Find and link OpenGL
+find_package(OpenGL REQUIRED)
+target_link_libraries(ShinMegamiTensei PRIVATE OpenGL::GL)
+
+# Find and link cxxopts
+find_package(cxxopts CONFIG REQUIRED)
+target_link_libraries(ShinMegamiTensei PRIVATE cxxopts::cxxopts)
+
+# Find and link xsimd
+find_package(xsimd CONFIG REQUIRED)
+target_link_libraries(ShinMegamiTensei PRIVATE xsimd)
+
+# Find and link GLEW
+find_package(GLEW REQUIRED)
+target_link_libraries(ShinMegamiTensei PRIVATE GLEW::GLEW)
+
+# Find and link GLFW
+find_package(glfw3 CONFIG REQUIRED)
+target_link_libraries(ShinMegamiTensei PRIVATE glfw)
+

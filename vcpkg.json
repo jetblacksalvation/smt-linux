@@ -1,7 +1,10 @@
 {
   "dependencies": [
     "cxxopts",
+    "opengl",
+    "glfw3",
+    "glew",
     "xsimd",
-    "sfml"
+    "opengl-registry"
   ]
 }
