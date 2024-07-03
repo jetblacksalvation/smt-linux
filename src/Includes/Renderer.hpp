@@ -1,11 +1,13 @@
 #ifndef RENDERER_SMT
 #define RENDERER_SMT
 
-#include "Common.hpp"
+//#include "Common.hpp"
 #include <thread>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <map>
+#include <functional>
+
 /*
 	RenderLoop, start with .start method ,,
 	Uses event binder
@@ -27,6 +29,10 @@ public:
 	{
 		return events;
 	}
+	void AddNewEvent(EventDispatcherDelegate f)
+	{
+		this->events.push_back(f);
+	}
 	//use copy constructor to change this ... 
 private:
 	GLFWwindow* window;
@@ -36,25 +42,28 @@ class RenderThread
 {
 public:
 	RenderThread();
+	~RenderThread();
 	void StartGameLoop();
 	void EndGameLoop();
 	void InitWindow();
+	void AddEvent(EventDispatcher::EventDispatcherDelegate f)
+	{
+		_eventDispatcher.AddNewEvent(f);
+	}
 private:
 	EventDispatcher _eventDispatcher;
 	GLFWwindow* _window;
 	std::thread _gameRenderThread;
-	//bool shoudRun = true;// just invoke kill function or break whatever
+	bool isThreadAlive = true;// just invoke kill function or break whatever
 };
 
 
 class Render
 {
 public:
-	static void _InitRenderLoop(OnInit*);
-
-private:
+	static void InitRenderLoop();
 	RenderThread renderThread; 
-	static inline  OnInit RenderLoopInitializer = OnInit(_InitRenderLoop);
+	//static inline  OnInit RenderLoopInitializer = OnInit(_InitRenderLoop);
 };
 
 #endif // ! RENDERER_SMT

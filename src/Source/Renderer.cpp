@@ -48,6 +48,7 @@ void RenderThread::InitWindow()
 }
 void RenderThread::StartGameLoop()
 {
+    
 
     while (!glfwWindowShouldClose(this->_window)) {
         // Clear the color buffer
@@ -55,27 +56,40 @@ void RenderThread::StartGameLoop()
 
         // Swap front and back buffers
         glfwSwapBuffers(_window);
-
+        //glFeedbackBuffer
         // Poll for and process events
         glfwPollEvents();
 
         for (auto userDefinedEventFunc : this->_eventDispatcher.GetEventList())
         {
+            std::cout << typeid(userDefinedEventFunc).name()<<"\n";
             userDefinedEventFunc(_window);
         }
+    }
+}
+RenderThread::~RenderThread() {
+    if (not isThreadAlive)
+    {
+        EndGameLoop();
+    }
+    else 
+    {
+        return;
+        //dead anyways even if out of scope 
     }
 }
 void RenderThread::EndGameLoop()
 {
     this->_gameRenderThread.~thread();
+    isThreadAlive = false;
+
     glfwDestroyWindow(_window);
     glfwTerminate();
 }
 
-void Render::_InitRenderLoop(OnInit* ptr)
+void Render::InitRenderLoop()
 {
     Render renderer;
-    renderer.renderThread.StartGameLoop();
 
     // Terminate GLFW
 
