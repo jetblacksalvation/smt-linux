@@ -23,11 +23,14 @@ public:
 	EventDispatcher(GLFWwindow* window, std::initializer_list<EventDispatcherDelegate> events) :window(window), events(events)
 	{
 	}
-
+	std::vector<EventDispatcherDelegate> GetEventList()
+	{
+		return events;
+	}
 	//use copy constructor to change this ... 
 private:
 	GLFWwindow* window;
-	std::vector< EventDispatcherDelegate> events;
+	std::vector<EventDispatcherDelegate> events;
 };
 class RenderThread
 {
@@ -35,21 +38,22 @@ public:
 	RenderThread();
 	void StartGameLoop();
 	void EndGameLoop();
+	void InitWindow();
 private:
-	void _InitWindow();
 	EventDispatcher _eventDispatcher;
 	GLFWwindow* _window;
 	std::thread _gameRenderThread;
 	//bool shoudRun = true;// just invoke kill function or break whatever
 };
 
-class RenderLoop
+
+class Render
 {
 public:
 	static void _InitRenderLoop(OnInit*);
 
 private:
-
+	RenderThread renderThread; 
 	static inline  OnInit RenderLoopInitializer = OnInit(_InitRenderLoop);
 };
 

@@ -4,8 +4,16 @@
 
 #include <iostream>
 
-//init = { static_cast<OnInit::OnInitFuncT>(&RenderLoop::_InitRenderLoop) };
+//init = { static_cast<OnInit::OnInitFuncT>(&Render::_InitRenderLoop) };
 RenderThread::RenderThread() 
+{
+
+    this->_eventDispatcher  = EventDispatcher(this->_window);
+    this->InitWindow();
+    this->_gameRenderThread = std::thread(&RenderThread::StartGameLoop, this);
+
+}
+void RenderThread::InitWindow() 
 {
     // Initialize GLFW
     if (!glfwInit()) {
@@ -36,30 +44,39 @@ RenderThread::RenderThread()
         return;
     }
 
-    this->_eventDispatcher = EventDispatcher(this->_window);
 
 }
-
-void RenderLoop::_InitRenderLoop(OnInit* ptr)
+void RenderThread::StartGameLoop()
 {
-    
 
-    // Set the swap interval for the current context (1 means V-Sync is enabled)
-    glfwSwapInterval(1);
-
-    // Main loop
-    while (!glfwWindowShouldClose(window)) {
+    while (!glfwWindowShouldClose(this->_window)) {
         // Clear the color buffer
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Swap front and back buffers
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(_window);
 
         // Poll for and process events
         glfwPollEvents();
+
+        for (auto userDefinedEventFunc : this->_eventDispatcher.GetEventList())
+        {
+            userDefinedEventFunc(_window);
+        }
     }
+}
+void RenderThread::EndGameLoop()
+{
+    this->_gameRenderThread.~thread();
+    glfwDestroyWindow(_window);
+    glfwTerminate();
+}
+
+void Render::_InitRenderLoop(OnInit* ptr)
+{
+    Render renderer;
+    renderer.renderThread.StartGameLoop();
 
     // Terminate GLFW
-    glfwDestroyWindow(window);
-    glfwTerminate();
+
 }
