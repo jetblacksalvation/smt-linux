@@ -2,6 +2,7 @@
 #include <thread>
 #include <windows.h>
 
+#include "Common.hpp"
 #include <iostream>
 
 //init = { static_cast<OnInit::OnInitFuncT>(&Render::_InitRenderLoop) };
@@ -52,7 +53,7 @@ void RenderThread::StartGameLoop()
 
     while (!glfwWindowShouldClose(this->_window)) {
         // Clear the color buffer
-        glClear(GL_COLOR_BUFFER_BIT);
+        //glClear(GL_COLOR_BUFFER_BIT);
 
         // Swap front and back buffers
         glfwSwapBuffers(_window);
