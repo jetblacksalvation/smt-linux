@@ -1,5 +1,6 @@
-cmake_minimum_required(VERSION 3.16)
-project(ShinMegamiTensei LANGUAGES CXX)
+include(FetchContent)
+cmake_minimum_required(VERSION 3.18)
+project(ShinMegamiTensei LANGUAGES CXX C)
 
 if (POLICY CMP0141)
   cmake_policy(SET CMP0141 NEW)
@@ -19,22 +20,21 @@ endif()
 
 # Collect all source and header files
 set(SOURCE_FILES
+    src/Source/glad.c
     src/Source/main.cpp
     src/Source/Renderer.cpp
     src/Source/Common.cpp
 )
 
-set(HEADER_FILES
-    src/Includes/Common.hpp
-    src/Includes/Renderer.hpp
-)
+
+
 
 # Add the main executable
-add_executable(ShinMegamiTensei ${SOURCE_FILES} ${HEADER_FILES})
+add_executable(ShinMegamiTensei ${SOURCE_FILES} ${HEADER_FILES} )
 
 # Set the C++ standard to 23 if CMake version is greater than 3.12
 if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET ShinMegamiTensei PROPERTY CXX_STANDARD 23)
+  set_property(TARGET ShinMegamiTensei PROPERTY CXX_STANDARD 23 C)
 endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/src/Includes)
@@ -52,10 +52,23 @@ find_package(xsimd CONFIG REQUIRED)
 target_link_libraries(ShinMegamiTensei PRIVATE xsimd)
 
 # Find and link GLEW
-find_package(GLEW REQUIRED)
+find_package(GLEW CONFIG REQUIRED)
 target_link_libraries(ShinMegamiTensei PRIVATE GLEW::GLEW)
 
 # Find and link GLFW
 find_package(glfw3 CONFIG REQUIRED)
 target_link_libraries(ShinMegamiTensei PRIVATE glfw)
 
+find_package(glm CONFIG REQUIRED)
+target_link_libraries(ShinMegamiTensei PRIVATE glm::glm)
+
+FetchContent_Declare(
+    glad
+    GIT_REPOSITORY https://github.com/Dav1dde/glad.git
+    GIT_TAG        658f48e72aee3c6582e80b05ac0f8787a64fe6bb #v2.0.6
+    GIT_PROGRESS   TRUE
+    SOURCE_SUBDIR  cmake
+)
+FetchContent_MakeAvailable(glad)
+glad_add_library(glad_gl_core_43 STATIC REPRODUCIBLE LOADER API gl:core=4.3)
+target_link_libraries(ShinMegamiTensei PRIVATE glad_gl_core_43)

@@ -3,8 +3,6 @@
 
 #include <functional>
 #include <vector>
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 #include "Renderer.hpp"
 class OnInit
 {
@@ -51,6 +49,7 @@ namespace Helpers
         glShaderSource(shader, 1, &source, &length);
         glCompileShader(shader);
     }
+
 }
 
 #endif // !COMMON_SMT

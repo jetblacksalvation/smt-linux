@@ -3,7 +3,9 @@
     "cxxopts",
     "opengl",
     "glfw3",
+    "glad",
     "glew",
+    "glm",
     "xsimd",
     "opengl-registry"
   ]

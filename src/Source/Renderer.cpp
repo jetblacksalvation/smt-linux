@@ -1,54 +1,44 @@
 #include "Renderer.hpp"
-#include <thread>
-#include <windows.h>
-
-#include "Common.hpp"
 #include <iostream>
+#include "glad/glad.h"
 
 //init = { static_cast<OnInit::OnInitFuncT>(&Render::_InitRenderLoop) };
 RenderThread::RenderThread() 
 {
+    
 
     this->_eventDispatcher  = EventDispatcher(this->_window);
     this->InitWindow();
     this->_gameRenderThread = std::thread(&RenderThread::StartGameLoop, this);
 
 }
-void RenderThread::InitWindow() 
+void RenderThread::InitWindow()
 {
     // Initialize GLFW
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
         return;
     }
-
-    // Set GLFW context version to 3.3 and use the core profile
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
     // Create a windowed mode window and its OpenGL context
+
     this->_window = glfwCreateWindow(800, 600, "Shin Megami Tensei", NULL, NULL);
     if (!this->_window) {
         std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return;
     }
-
+    
     // Make the window's context current
     glfwMakeContextCurrent(_window);
 
-    // Initialize GLEW to setup the OpenGL function pointers
-    GLenum glewInitResult = glewInit();
-    if (glewInitResult != GLEW_OK) {
-        std::cerr << "Failed to initialize GLEW: " << glewGetErrorString(glewInitResult) << std::endl;
-        return;
-    }
-
-
+ /*   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return ;
+    }*/
 }
 void RenderThread::StartGameLoop()
 {
+    //glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
     
 
     while (!glfwWindowShouldClose(this->_window)) {
@@ -56,9 +46,22 @@ void RenderThread::StartGameLoop()
         //glClear(GL_COLOR_BUFFER_BIT);
 
         // Swap front and back buffers
+
+        glClear(GL_COLOR_BUFFER_BIT);
+        float* ptr = new float[2];
+        glVertexAttribPointer(
+            0,
+            3,
+            GL_INT,
+            GL_FALSE,
+            3 * 4,
+            ptr
+        );
+        delete ptr;
+        /* Swap front and back buffers */
         glfwSwapBuffers(_window);
-        //glFeedbackBuffer
-        // Poll for and process events
+
+        /* Poll for and process events */
         glfwPollEvents();
 
         for (auto userDefinedEventFunc : this->_eventDispatcher.GetEventList())
@@ -81,6 +84,7 @@ RenderThread::~RenderThread() {
 }
 void RenderThread::EndGameLoop()
 {
+    std::cout << "Ending game\n";
     this->_gameRenderThread.~thread();
     isThreadAlive = false;
 
