@@ -49,26 +49,33 @@ void RenderThread::InitOpenGL()
     const char* vertexShaderSource = R"(
 #version 330 core
 layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 vertexColor;
+varying highp vec3 color;
 void main()
 {
     gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+    color = vertexColor;
 }
 )";
 
     const char* fragmentShaderSource = R"(
 #version 330 core
 out vec4 FragColor;
+varying lowp vec3 color;
 void main()
 {
-    FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f); // Change to red for testing
+
+    FragColor = vec4(color, 1.0f); // Change to red for testing
 }
 )";
 
     // Build and compile the shaders
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
 
+    glCompileShader(vertexShader);
+    glBindAttribLocation(vertexShader, 0, "aPos");
+    glBindAttribLocation(vertexShader, 1, "vertexColor");
     int success;
     char infoLog[512];
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
@@ -90,6 +97,7 @@ void main()
     _shaderProgram = glCreateProgram();
     glAttachShader(_shaderProgram, vertexShader);
     glAttachShader(_shaderProgram, fragmentShader);
+
     glLinkProgram(_shaderProgram);
 
     glGetProgramiv(_shaderProgram, GL_LINK_STATUS, &success);
@@ -103,10 +111,13 @@ void main()
 
     // Set up vertex data and configure vertex attributes
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f,  // Left  
-         0.5f, -0.5f, 0.0f,  // Right 
-         0.0f,  0.5f, 0.0f   // Top   
+        // Positions        // Colors
+         0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // Top-right corner
+         0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  // Bottom-right corner
+        -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  // Bottom-left corner
+        -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f   // Top-left corner
     };
+
 
     glGenVertexArrays(1, &_VAO);
     glGenBuffers(1, &_VBO);
@@ -115,12 +126,12 @@ void main()
 
     glBindBuffer(GL_ARRAY_BUFFER, _VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    uint64_t offset = (sizeof(vertices) / sizeof(vertices[0])); 
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 }
 
 void RenderThread::StartGameLoop()
@@ -141,8 +152,7 @@ void RenderThread::StartGameLoop()
         glBindVertexArray(_VAO);
 
         // Draw the triangle
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
+        glDrawArrays(GL_TRIANGLES, 0, 6);  // or glDrawElements if using indices
         // Swap front and back buffers
         glfwSwapBuffers(this->_window);
 
