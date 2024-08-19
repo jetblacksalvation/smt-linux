@@ -6,8 +6,4 @@ int main()
 	OnInit init;
 	init.StartInit();
 
-	while (true)
-	{
-
-	}
 }
