@@ -3,10 +3,9 @@
 
 //#include "Common.hpp"
 #include <thread>
-
-#include <GLFW/glfw3.h>
 #include <iostream>
-
+#include "glad/gl.h"
+#include <GLFW/glfw3.h>
 #include <map>
 #include <functional>
 

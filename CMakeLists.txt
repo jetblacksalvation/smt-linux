@@ -20,7 +20,6 @@ endif()
 
 # Collect all source and header files
 set(SOURCE_FILES
-    src/Source/glad.c
     src/Source/main.cpp
     src/Source/Renderer.cpp
     src/Source/Common.cpp
@@ -47,9 +46,7 @@ target_link_libraries(ShinMegamiTensei PRIVATE OpenGL::GL)
 find_package(cxxopts CONFIG REQUIRED)
 target_link_libraries(ShinMegamiTensei PRIVATE cxxopts::cxxopts)
 
-# Find and link xsimd
-find_package(xsimd CONFIG REQUIRED)
-target_link_libraries(ShinMegamiTensei PRIVATE xsimd)
+
 
 # Find and link GLEW
 find_package(GLEW CONFIG REQUIRED)
@@ -69,6 +66,13 @@ FetchContent_Declare(
     GIT_PROGRESS   TRUE
     SOURCE_SUBDIR  cmake
 )
+set(CMAKE_CXX_FLAGS_OLD "${CMAKE_CXX_FLAGS}")
+
+# Add other flags here.
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --on-demand")
+
 FetchContent_MakeAvailable(glad)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_OLD}")
 glad_add_library(glad_gl_core_43 STATIC REPRODUCIBLE LOADER API gl:core=4.3)
 target_link_libraries(ShinMegamiTensei PRIVATE glad_gl_core_43)

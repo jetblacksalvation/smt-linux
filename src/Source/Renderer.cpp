@@ -1,6 +1,5 @@
 #include "Renderer.hpp"
 #include <iostream>
-#include "glad/glad.h"
 
 //init = { static_cast<OnInit::OnInitFuncT>(&Render::_InitRenderLoop) };
 RenderThread::RenderThread() 
@@ -30,11 +29,12 @@ void RenderThread::InitWindow()
     
     // Make the window's context current
     glfwMakeContextCurrent(_window);
+    int version = gladLoadGL(glfwGetProcAddress);
 
- /*   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    if (version == 0) {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return ;
-    }*/
+    }
 }
 void RenderThread::StartGameLoop()
 {

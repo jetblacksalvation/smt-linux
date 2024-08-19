@@ -4,6 +4,7 @@
 #include <functional>
 #include <vector>
 #include "Renderer.hpp"
+
 class OnInit
 {
 public:
@@ -21,7 +22,7 @@ private:
 };
 namespace Helpers
 {
-    static void show_info_log(
+    static void show_info_lo(
         GLuint object,
         PFNGLGETSHADERIVPROC glGet__iv,
         PFNGLGETSHADERINFOLOGPROC glGet__InfoLog
@@ -45,6 +46,7 @@ namespace Helpers
         GLint shader_ok;
         if (!source)
             return 0;
+        
         shader = glCreateShader(type);
         glShaderSource(shader, 1, &source, &length);
         glCompileShader(shader);
