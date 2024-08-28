@@ -1,5 +1,5 @@
 # CMake SFML Project Template
- 
+
 #python and the jinja2 module MUST be installed
 
  Dependancies:
