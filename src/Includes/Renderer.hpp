@@ -4,7 +4,7 @@
 //#include "Common.hpp"
 #include <thread>
 #include <iostream>
-#include "glad/gl.h"
+#include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include <map>
 #include <functional>
