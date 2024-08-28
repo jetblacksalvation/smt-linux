@@ -4,6 +4,8 @@
 #include <GLFW/glfw3.h>
 #include <thread>
 // Shader source code
+#include "ShaderCommon.hpp"
+
 
 
 
@@ -50,7 +52,6 @@ void RenderThread::InitOpenGL()
 #version 330 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 vertexColor;
-varying highp vec3 color;
 void main()
 {
     gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
@@ -61,7 +62,6 @@ void main()
     const char* fragmentShaderSource = R"(
 #version 330 core
 out vec4 FragColor;
-varying lowp vec3 color;
 void main()
 {
 
@@ -70,10 +70,8 @@ void main()
 )";
 
     // Build and compile the shaders
-    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+    unsigned int vertexShader = ShaderCommon::compile_glsl_string(GL_VERTEX_SHADER, (GLchar*)vertexShaderSource);
 
-    glCompileShader(vertexShader);
     glBindAttribLocation(vertexShader, 0, "aPos");
     glBindAttribLocation(vertexShader, 1, "vertexColor");
     int success;
@@ -84,9 +82,7 @@ void main()
         std::cerr << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 
-    unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
+    unsigned int fragmentShader = ShaderCommon::compile_glsl_string(GL_FRAGMENT_SHADER,(GLchar*)fragmentShaderSource);
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
     if (!success) {
         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);

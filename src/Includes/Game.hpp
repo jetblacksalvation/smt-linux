@@ -8,7 +8,6 @@ class TriangleRenderer
 {
     static inline EventDispatcher::EventDispatcherDelegate _RenderTriangle = [](GLFWwindow* window) 
 	{
-
 		std::cout << "Rendering Triangle\n";
     };
 

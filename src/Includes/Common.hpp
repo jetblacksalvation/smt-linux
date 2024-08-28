@@ -37,20 +37,7 @@ namespace Helpers
         fprintf(stderr, "%s", log);
         free(log);
     }
-    static GLuint compile_glsl_string(GLenum type, GLchar* const source)
-    {
-        GLint length = std::string((char*)source).size();
 
-
-        GLuint shader;
-        GLint shader_ok;
-        if (!source)
-            return 0;
-        
-        shader = glCreateShader(type);
-        glShaderSource(shader, 1, &source, &length);
-        glCompileShader(shader);
-    }
 
 }
 
