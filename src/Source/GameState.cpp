@@ -100,6 +100,22 @@ void RoamingState::MovePlayer()
 
 void RoamingState::HandleState()
 {
+    while (Renderer::window->pollEvent(IPlayerState::event))
+    {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
+        {
+
+            Renderer::window->close();
+            // PlayerStateRegistrar::PrintInfo();
+        }
+        IPlayerState::keys[UP]        = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
+        IPlayerState::keys[LEFT]      = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
+        IPlayerState::keys[DOWN]      = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
+        IPlayerState::keys[RIGHT]     = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
+        IPlayerState::keys[ROT_LEFT]  = sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
+        IPlayerState::keys[ROT_RIGHT] = sf::Keyboard::isKeyPressed(sf::Keyboard::E);
+    }
+
     if (IPlayerState::keys[UP])
     {
         MovePlayer();
