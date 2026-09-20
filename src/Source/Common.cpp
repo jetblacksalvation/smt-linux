@@ -2,6 +2,7 @@
 #include "../Includes/IRenderer/Renderer.hpp"
 #include "../Includes/IState/GameState.hpp"
 #include "../Includes/Common.hpp"
+#include "PlayerState.hpp"
 std::shared_ptr<IPlayerState> Game::playerState;
 Game::TGameInstance Game::gameInstance;
 

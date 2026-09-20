@@ -6,6 +6,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
 #include "../IState/GameState.hpp"
+
+// i cant find any references to any implementators, wtf was i thinking
 class IEvent {
 public:
 	using TEventFunction   = std::function<void(sf::Event)>;

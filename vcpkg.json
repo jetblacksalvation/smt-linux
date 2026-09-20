@@ -2,7 +2,9 @@
   "dependencies": [
     "cxxopts",
     "xsimd",
-    "sfml"
+    "sfml",
+    "nlohmann-json"
+
   ]
   ,
   "overrides": [

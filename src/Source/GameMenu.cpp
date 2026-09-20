@@ -1,6 +1,7 @@
 #include "./IRenderer/Renderer.hpp"
 #include "./GameMenu.hpp"
 #include "./Common.hpp"
+#include "./PlayerState.hpp"
 MenuState::MenuState()
 {
     std::cout << "Menu state created\n";
@@ -49,15 +50,19 @@ void MenuState::HandleState()
 
 void MenuState::OnLoad()
 {
+
+
+
 }
 void MenuState::draw2DScene()
 {
     auto worldData = Game::gameInstance->worldData;
     float angle = IPlayerState::angle;
+    
     auto &playerData = *(RoamingState *)PlayerStateRegistrar::getInstance<RoamingState>().get();
     playerPos = playerData.playerPos;
     sf::Texture texture;
-    texture.loadFromFile("Arrow.png");
+    texture.loadFromFile(std::string(ASSET_PATH) + "Arrow.png");
     sf::Sprite sprite;
     sprite.setTexture(texture);
     sprite.setPosition({400, 400});

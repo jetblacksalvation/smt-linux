@@ -1,7 +1,13 @@
 #include "../Includes/IState/GameState.hpp"
 #include "../Includes/Common.hpp"
-RoamingState::GridHelper::GridHelper(RoamingState* state) {
-    this->gridData = { { 1,1,1,1,1,1,1 },
+#include "Grid.hpp"
+#include "PlayerState.hpp"
+GridHelper::GridHelper() {
+   //safer to not default initialize because im trying to obtain a registered state before its fully constructed.
+   
+}
+void GridHelper::gridToWorld() {
+     this->gridData = { { 1,1,1,1,1,1,1 },
     { 1,0,0,0,0,0,1 },
     { 1,1,0,0,1,1,1 },
     { 1,1,0,0,1,1,1 } ,
@@ -10,7 +16,7 @@ RoamingState::GridHelper::GridHelper(RoamingState* state) {
     const int scaleFactor = 100;
     WorldHelper::T_WorldObjects& allWorldShapes = Game::gameInstance->worldData.worldObjects;
     std::cout << "Populating world...\n";
-    auto& playerData = *state;
+    auto& playerData = GetInstance(RoamingState);
 
     //my stupid ahh, if x=0 the walls would be screwed up. so i have magic number here to offset when needed, and it starts at 1 so calcs dont get fucked 
     WorldHelper::T_PrimitiveShape points({ sf::Vector2f{-50,50}, sf::Vector2f{50, 50}, sf::Vector2f{-50,50 }, sf::Vector2f{-50,150},  sf::Vector2f{50,150},sf::Vector2f{50,50 } });//last index is so that lines can wrap back to start 
@@ -50,10 +56,7 @@ RoamingState::GridHelper::GridHelper(RoamingState* state) {
         }
     }
 }
-void RoamingState::GridHelper::gridToWorld() {
-
-}
-RoamingState::GridHelper::GridHelper(std::ifstream file) {
+GridHelper::GridHelper(std::ifstream file) {
     std::string line; 
     std::vector<std::vector<int>> gData{};
 

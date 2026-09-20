@@ -1,31 +1,13 @@
 #ifndef EncounterStateDef 
-#define EncounterStateDef 1 
+#define EncounterStateDef 
 #include "./IState/GameState.hpp"
 
 class EncounterState : public IPlayerState {
 public:
 
+    EncounterState();//should keep it empty because if you are unlucky maybe it could try to get playerstate or some shi
 
-    class EncounterT{
-        
-    };
-    class IEncounterEntry{
-
-        inline static const char* enemy_src_path_ = "./enemy_src";
-
-
-    };          
-    class IEncounterEntryLoader: public IEncounterEntry{
-        IEncounterEntryLoader(){
-            
-        }
-    };
-    class IEncounterFactoryConfig;//settings here apply both to factory and its entries...
-    class IEncounterFactory; 
-
-    EncounterState();
-
-
+    
 
 
     void OnLoad() override{
@@ -33,8 +15,19 @@ public:
     }
     void HandleState() override{
 
-
     };
+
+    //called probably by players roaming state sometimes, maybe sometimes by 
+    void UpdateEncounters() 
+    {
+        
+    }
+
+    //called by  roaming state on move, 
+    void RandomEncounters()
+    {
+
+    }
 };
 
 

@@ -1,0 +1,32 @@
+{
+    "encounterType" : "random",
+    "dialog"        :
+    {
+        "onTalk"    : 
+        {
+            "lowHpLeeway" : 20,
+            "lowHP"     : "fuck u man why u hit me mf",
+            "acceptedTalkRequest"  : 
+            [
+                {  
+                    "questions" :
+                    {
+                        "is amognus goood" : 
+                        {
+                            "playerResponses" :
+                            ["yes", "no"],
+                            "demonResponses"  :
+                            {
+                                "positive" : ["i love amongus", "i like sus"],
+                                "negative" : ["i hate amogus"]
+                            }
+                            
+                        }
+                    }
+                }
+            ]
+        }
+    }
+
+
+}

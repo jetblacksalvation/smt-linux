@@ -61,6 +61,12 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "semaphore": "cpp",
-        "bitset": "cpp"
-    }
+        "bitset": "cpp",
+        
+    },
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/out/build/linux-debug/compile_commands.json"
+
+
+
+
 }

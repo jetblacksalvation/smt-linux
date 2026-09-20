@@ -1,6 +1,8 @@
 #include "../Includes/IState/GameState.hpp"
 #include "../Includes/IRenderer/Renderer.hpp"
 #include "../Includes/Common.hpp"
+#include "Grid.hpp"
+#include "PlayerState.hpp"
 #include "GameMenu.hpp"
 std::unordered_map<std::type_index, std::shared_ptr<IPlayerState>> PlayerStateRegistrar::instances;
 
@@ -61,8 +63,7 @@ RoamingState::RoamingState()
 
 
     std::cout << "Roaming State Instantiated!\n";
-    gridData = GridHelper(this);
-    texture.loadFromFile(std::string(ASSET_PATH) + "brickWall.png");
+    texture.loadFromFile(std::string(ASSET_PATH) + "/levels/level0/defaultWallTexture.png");
     sprite.setTexture(texture);
     OnLoad();
 }
@@ -100,9 +101,21 @@ void RoamingState::MovePlayer()
 
 void RoamingState::HandleState()
 {
+    if(not isLoaded)
+    {
+        //hopefully loads once RoamingState is fully initialized
+        gridData.gridToWorld();
+        isLoaded = true;
+
+    }
     while (Renderer::window->pollEvent(IPlayerState::event))
     {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::M))
+        {
+            PlayerStateRegistrar::HandleChangeState<MenuState>();
+            return;
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
         {
 
             Renderer::window->close();
@@ -120,6 +133,8 @@ void RoamingState::HandleState()
     {
         MovePlayer();
         std::this_thread::sleep_for(std::chrono::milliseconds(250));
+        //random chance of an attack!
+
     }
 
     if (IPlayerState::keys[ROT_LEFT])
@@ -128,7 +143,7 @@ void RoamingState::HandleState()
     }
     if (IPlayerState::keys[ROT_RIGHT])
     {
-        (this->faceIndex + 1 > 3) ? faceIndex = 0 : faceIndex++;
+        (this->faceIndex + 1 >= 3) ? faceIndex = 0 : faceIndex++;
     }
 
     if (IPlayerState::keys[ROT_LEFT] || IPlayerState::keys[ROT_RIGHT]) {
@@ -136,7 +151,7 @@ void RoamingState::HandleState()
         Game& game                   = *Game::gameInstance.get();
         Renderer::TWindowPtr& window = Renderer::window;
         IPlayerState::angle          = midpointAngle;
-
+        //std::cout<<"FACE INDEX DURRING OP = "<<faceIndex <<" " <<angle << std::endl; 
         draw3DScene();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(175));
@@ -156,6 +171,7 @@ void RoamingState::HandleState()
     }
 
     IPlayerState::angle = faces[faceIndex];
+    //std::cout<<"FACE INDEX current = "<<faceIndex <<" " <<angle << std::endl; 
 
     draw3DScene();
 

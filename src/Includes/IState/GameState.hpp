@@ -1,5 +1,6 @@
 #ifndef GAMESTATE_HPP
 #define GAMESTATE_HPP
+#include <SFML/System/Vector2.hpp>
 #include <cmath>
 #define M_PI           3.14159265358979323846  /* pi */
 #include <fstream> 
@@ -86,8 +87,9 @@ public:
         }
         catch (const std::runtime_error& error) {
             PlayerStateRegistrar::registerInstance(std::make_shared<T>());
-            std::cout << "Registered " << typeid(T).name() << std::endl; 
+
             currentState = instances[typeid(T)];
+            std::cout << "Registered " << typeid(T).name() << std::endl; 
         }
 
     }
@@ -112,47 +114,13 @@ public:
 private:
     static std::unordered_map<std::type_index, std::shared_ptr<IPlayerState>> instances;
 };
+
+/*
+    Wtf was i smoking why did i write this and never use it
+    edit ngl this one is useful asf
+    
+*/
 #define GetInstance(arg) (*(arg*)PlayerStateRegistrar::getInstance<arg>().get())
 
-class RoamingState : public IPlayerState {
-public:
-    RoamingState();
-    sf::Vector2f playerPos = { 0,0 };
-    sf::Vector2<uint32_t> gridPos = {3,1 };
-    //grid position is used to set playerPos... cry about it because its bad. not enough that i remove it though :P
-    sf::Texture texture;
-    sf::Sprite sprite;
-    sf::Keyboard lastKey; 
-
-    float offset = (float)M_PI / 4.F;
-    int faceIndex = 0;
-    float faces[4] = { 0 + offset, ((float)M_PI / 2) + offset, ((float)M_PI) + offset, 3 * ((float)M_PI / 2) + offset};
-
-    class GridHelper {
-    public: 
-        GridHelper() {};
-        GridHelper(RoamingState*);
-        GridHelper(std::ifstream);
-        void gridToWorld(); //loads datas into world... 
-        std::vector<std::vector<int>> gridData; 
-        
-        void loadGrid();
-
-
-    private:
-        std::vector<int> gridValues; 
-    };
-    GridHelper gridData;
-
-    void setGridPos(const sf::Vector2<uint32_t>&&);
-    void setGridPos(const sf::Vector2<uint32_t>&);
-
-    void MovePlayer();
-    void HandleState();
-    void OnLoad() ;
-    void draw3DScene();
-    sf::Vector2u windowSize ;
-
-};
 
 #endif

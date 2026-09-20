@@ -31,23 +31,20 @@ set(SOURCE_FILES
 ./src/Source/GameState.cpp
 ./src/Source/Grid.cpp
 ./src/Source/Renderer.cpp
+./src/Source/PlayerState.cpp
 )
 
-set(HEADER_FILES
-    src/Includes/Common.hpp
-    src/Includes/CommonMath.hpp
-    src/Includes/EncounterState.hpp
-    src/Includes/GameMenu.hpp
-    src/Includes/IRenderer/Renderer.hpp
-    src/Includes/IState/GameState.hpp
-)
+
 
 # Add the main executable
-add_executable(CMakeSFMLProject "src/main.cpp" ${SOURCE_FILES} ${HEADER_FILES})
+add_executable(CMakeSFMLProject "src/main.cpp" ${SOURCE_FILES})
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET CMakeSFMLProject PROPERTY CXX_STANDARD 23)
 endif()
+find_package(nlohmann_json CONFIG REQUIRED)
+
+target_link_libraries(CMakeSFMLProject PRIVATE nlohmann_json::nlohmann_json)
 
 # Include subdirectory for Common library
 include_directories(${CMAKE_SOURCE_DIR}/src/Includes)

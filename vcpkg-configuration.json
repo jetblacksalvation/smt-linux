@@ -5,7 +5,7 @@
     "repository": "https://github.com/microsoft/vcpkg"
   },
   "overlay-ports": [
-  "/home/deck/vscode/smt-linux/ports"
+  "/home/deck/vscode/smt-linux/ports" 
 ]
 ,
   "registries": [
