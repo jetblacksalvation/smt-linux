@@ -2,17 +2,13 @@
 #include "../Includes/Common.hpp"
 #include "Grid.hpp"
 #include "PlayerState.hpp"
+#include <sstream>
 GridHelper::GridHelper() {
    //safer to not default initialize because im trying to obtain a registered state before its fully constructed.
    
 }
 void GridHelper::gridToWorld() {
-     this->gridData = { { 1,1,1,1,1,1,1 },
-    { 1,0,0,0,0,0,1 },
-    { 1,1,0,0,1,1,1 },
-    { 1,1,0,0,1,1,1 } ,
-    { 1,1,1,0,1,1,1 } ,
-    { 1,1,1,1,1,1,1 }  };
+
     const int scaleFactor = 100;
     WorldHelper::T_WorldObjects& allWorldShapes = Game::gameInstance->worldData.worldObjects;
     std::cout << "Populating world...\n";
@@ -22,80 +18,91 @@ void GridHelper::gridToWorld() {
     WorldHelper::T_PrimitiveShape points({ sf::Vector2f{-50,50}, sf::Vector2f{50, 50}, sf::Vector2f{-50,50 }, sf::Vector2f{-50,150},  sf::Vector2f{50,150},sf::Vector2f{50,50 } });//last index is so that lines can wrap back to start 
 
     int vertexCount = 0;
-    for (uint32_t x = 1; x <= this->gridData.size(); x++) {
-        for (uint32_t y = 1; y <= this->gridData[x-1].size(); y++) {
+
+    for (uint32_t x = 1; x <= this->gridData.size(); x++)
+    {
+        for (uint32_t y = 1; y <= this->gridData[x - 1].size(); y++)
+        {
             WorldHelper::T_PrimitiveShape temp;
-            if (gridData[x - 1][y - 1] == 1) {
-                //((x - LoaderInstance.PlayerPosition[0]) * 2, (y - LoaderInstance.PlayerPosition[1]) * 2)
-                for (auto point : points) {
-                    try {
-                        temp.push_back({ point.x + ((x)) * scaleFactor, point.y + ((y)*scaleFactor) });
 
-                    }
-                    catch (...) {
-
-                    }
-
+            if (gridData[x - 1][y - 1] == 1)
+            {
+                for (auto point : points)
+                {
+                    temp.push_back({
+                        point.x + x * scaleFactor,
+                        point.y + y * scaleFactor
+                        });
                 }
-
-                //std::cout << x << ": " << point.x + ((x) *scaleFactor) << ", " << point.y + ((y) *scaleFactor) <<" OBJECT" << std::endl;
             }
 
-            if (gridData[x - 1][y - 1] == 2) {
-                std::cout << x << ", " << y << std::endl;
-                playerData.setGridPos({ x,(y ) });
+            if (gridData[x - 1][y - 1] == 2)
+            {
+                std::cout << "Spawn: "
+                    << x << ", "
+                    << y << '\n';
+
+                playerData.setGridPos({ x-1, y-1 });
             }
 
-            if (temp.size() > 0) {
-                vertexCount++;
-
-                //std::cout << vertexCount << " has a size of " << temp.size() << std::endl;
+            if (!temp.empty())
+            {
+                ++vertexCount;
                 allWorldShapes.push_back(temp);
-
             }
         }
     }
 }
-GridHelper::GridHelper(std::ifstream file) {
-    std::string line; 
-    std::vector<std::vector<int>> gData{};
+ GridHelper::GridHelper(const std::string& path)
+{
+    std::ifstream file(path);
+
+    if (!file.is_open())
+    {
+        throw std::runtime_error(
+            "Could not open grid file: " + path
+        );
+    }
+
+    gridData.clear();
+
+    std::string line;
 
     while (std::getline(file, line))
     {
-        std::vector<int> line{};
+        if (line.empty())
+            continue;
 
-        std::string intBuff; 
-        for (auto it : line) {
-            if (std::isdigit(it)) {
-                intBuff += it;
+        std::stringstream stream(line);
+        std::vector<int> row;
+        int value;
 
-            }
-            else if(it == '{') {
-                if (intBuff.size() > 0) {
-                    throw std::runtime_error("parse err");
-                }
-            }
-            else if (it == '}') {
-                
-                line.push_back(std::stoi(intBuff));
-                gData.push_back(line);
-                continue; 
-            }
-            if (it == ',') {
-                line.push_back(std::stoi(intBuff));
-                gData.push_back(line);
-            }
-            
+        while (stream >> value)
+        {
+            row.push_back(value);
         }
-        
-        //if (line != line.end()) {
 
-        //}
+        if (row.empty())
+            continue;
 
-       
+        if (!gridData.empty() &&
+            row.size() != gridData[0].size())
+        {
+            throw std::runtime_error(
+                "Invalid map: rows have different lengths"
+            );
+        }
 
-
-        // process pair (a,b)
+        gridData.push_back(row);
     }
-	//file.is_open
+
+    std::cout << "Loaded grid: " << path << '\n';
+    std::cout << "Rows: " << gridData.size() << '\n';
+
+    if (!gridData.empty())
+    {
+        std::cout << "Columns: "
+            << gridData[0].size()
+            << '\n';
+    }
 }

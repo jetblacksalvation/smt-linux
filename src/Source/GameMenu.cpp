@@ -30,9 +30,11 @@ void MenuState::HandleState()
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
         {
-            //auto &playerData = *(RoamingState *)PlayerStateRegistrar::getInstance<RoamingState>().get();
-            //std::cout << playerData.faceIndex << " : index\n";
-            //std::cout << playerData.playerPos.x << ", " << playerData.playerPos.y << " is player pos" << std::endl;
+            auto &playerData = *(RoamingState *)PlayerStateRegistrar::getInstance<RoamingState>().get();
+
+
+            std::cout << playerData.faceIndex << " : index" << ", " << playerData.faces[playerData.faceIndex] << " is the angle, " << std::endl;
+            std::cout << playerData.playerPos.x << ", " << playerData.playerPos.y << " is player pos" << std::endl;
         }
         IPlayerState::keys[UP]        = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
         IPlayerState::keys[LEFT]      = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
@@ -84,6 +86,8 @@ void MenuState::draw2DScene()
     collisionText.setCharacterSize(24);
     collisionText.setFillColor(sf::Color::Red);
 
+
+    //this code uses collisionText to draw the bounds of each wall if you hover over it with your cursor
     for (auto it : worldData.worldObjects)
     {
         sf::VertexArray objToDraw(sf::LinesStrip, it.size());
@@ -124,6 +128,11 @@ void MenuState::draw2DScene()
         }
         window->draw(objToDraw);
     }
+
+
+
+    //this code uses collisionText to draw player state information.
+    
 
     window->display();
 }

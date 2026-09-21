@@ -1,34 +1,76 @@
 {
-    "hp" : 20,
-    "mp" :2,
-    "strength":1,
-    "vitality" : 1,
-    "magic" :1,
-    "agility" :1,
-    "luck" : 1,
-    "position" : {"x":1,"y":1},
-    "skills" :{
-        "attack" :
-        {
-            "hpCost" :0,
-            "mpCost" : 0,
-            "description" : "Weak {} attack",
-            "type" : "physical"
-        }
-    },
-    "nonAttackSkills":
-    {
-        "talk":
-        {
-            "description" : "Talk to demon"
-            
-        },
-        "run":
-        {
-            "run from battle"
-        }
-    }
-    
+  "name": "Player",
 
+  "level": 1,
+  "experience": 0,
 
+  "hp": 20,
+  "maxHp": 20,
+
+  "mp": 2,
+  "maxMp": 2,
+
+  "stats": {
+    "strength": 1,
+    "vitality": 1,
+    "magic": 1,
+    "agility": 1,
+    "luck": 1
+  },
+
+  "position": {
+    "x": 1,
+    "y": 1,
+    "angle": 0
+  },
+
+  "money": 0,
+
+  "alignment": {
+    "law": 0,
+    "chaos": 0,
+    "neutral": 0
+  },
+
+  "experienceToNextLevel": 100,
+
+  "equipment": {
+    "weapon": null,
+    "armor": null,
+    "helmet": null,
+    "shield": null,
+    "accessory": null
+  },
+
+  "inventory": [],
+
+  "skills": ["Attack"],
+
+  "nonAttackSkills": ["talk", "escape"],
+
+  "resistances": {
+    "physical": "normal",
+    "fire": "normal",
+    "ice": "normal",
+    "electric": "normal",
+    "force": "normal",
+    "light": "normal",
+    "dark": "normal",
+    "almighty": "normal"
+  },
+
+  "statusEffects": [],
+
+  "flags": {
+    "canTalk": true,
+    "canNegotiate": true
+  },
+
+  "story": {
+    "completedEvents": [],
+    "keyItems": [],
+    "visitedLevels": [
+      "level0"
+    ]
+  }
 }

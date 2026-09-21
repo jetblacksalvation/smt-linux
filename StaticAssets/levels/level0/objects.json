@@ -1,0 +1,28 @@
+{
+  "objects": [
+    {
+      "id": "door_level1",
+      "type": "door",
+      "x": 3,
+      "y": 5,
+      "walkable": true,
+      "targetLevel": "level1",
+      "targetX": 2,
+      "targetY": 2
+    },
+    {
+      "id": "chest_001",
+      "type": "chest",
+      "x": 5,
+      "y": 3,
+      "walkable": false
+    },
+    {
+      "id": "npc_001",
+      "type": "npc",
+      "x": 4,
+      "y": 4,
+      "walkable": false
+    }
+  ]
+}

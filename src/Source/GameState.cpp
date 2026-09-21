@@ -5,6 +5,7 @@
 #include "PlayerState.hpp"
 #include "GameMenu.hpp"
 std::unordered_map<std::type_index, std::shared_ptr<IPlayerState>> PlayerStateRegistrar::instances;
+std::unordered_map<std::type_index, std::shared_ptr<IBackgroundState>> PlayerStateRegistrar::background_instances;
 
 sf::Event IPlayerState::event;
 float IPlayerState::angle  = 0; 
@@ -21,7 +22,7 @@ void RoamingState::setGridPos(const sf::Vector2<uint32_t> &vec)
 
 void RoamingState::OnLoad()
 {
-    setGridPos({1, 2});
+    setGridPos(this->gridPos);
 
     windowSize = Renderer::window->getSize();
 
@@ -92,7 +93,7 @@ void RoamingState::MovePlayer()
 
     if (newPosition.x < gridData.gridData.size() && newPosition.y < gridData.gridData[newPosition.x].size())
     {
-        if (gridData.gridData[newPosition.x][newPosition.y] == 0)
+        if (gridData.gridData[newPosition.x][newPosition.y] == 0 || gridData.gridData[newPosition.x][newPosition.y] ==2)
         {
             setGridPos(newPosition);
         }
@@ -143,23 +144,49 @@ void RoamingState::HandleState()
     }
     if (IPlayerState::keys[ROT_RIGHT])
     {
-        (this->faceIndex + 1 >= 3) ? faceIndex = 0 : faceIndex++;
+        (this->faceIndex + 1 > 3) ? faceIndex = 0 : faceIndex++;
     }
 
-    if (IPlayerState::keys[ROT_LEFT] || IPlayerState::keys[ROT_RIGHT]) {
-        float midpointAngle          = (IPlayerState::angle + faces[faceIndex]) / 2.0f;
-        Game& game                   = *Game::gameInstance.get();
-        Renderer::TWindowPtr& window = Renderer::window;
-        IPlayerState::angle          = midpointAngle;
-        //std::cout<<"FACE INDEX DURRING OP = "<<faceIndex <<" " <<angle << std::endl; 
+    if (IPlayerState::keys[ROT_LEFT] || IPlayerState::keys[ROT_RIGHT])
+    {
+        // faceIndex has already been changed to the desired direction.
+
+        const float current = IPlayerState::angle;
+        const float target = faces[faceIndex];
+
+        float delta = target - current;
+
+        // Choose the shortest path around the circle.
+        if (delta > M_PI)
+            delta -= 2.0f * M_PI;
+        else if (delta < -M_PI)
+            delta += 2.0f * M_PI;
+
+        // Halfway through the turn.
+        const float midpoint = current + delta * 0.5f;
+
+        IPlayerState::angle = midpoint;
+
         draw3DScene();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(175));
-        window->clear(sf::Color::White);
-        
+
+        // Finish the turn.
+        IPlayerState::angle = target;
+
+        Renderer::window->clear(sf::Color::White);
+
         IPlayerState::keys[ROT_RIGHT] = false;
-        IPlayerState::keys[ROT_LEFT]  = false; 
+        IPlayerState::keys[ROT_LEFT] = false;
     }
+	else if (IPlayerState::keys[LEFT])
+	{
+		IPlayerState::angle -= 0.1f;
+	}
+	else if (IPlayerState::keys[RIGHT])
+	{
+		IPlayerState::angle += 0.1f;
+	}
 
     if (IPlayerState::angle < 0.0)
     {

@@ -3,6 +3,7 @@
 #include "../Includes/IState/GameState.hpp"
 #include "../Includes/Common.hpp"
 #include "PlayerState.hpp"
+#include "BackgroundServices/DebugService.hpp"
 std::shared_ptr<IPlayerState> Game::playerState;
 Game::TGameInstance Game::gameInstance;
 
@@ -17,6 +18,7 @@ Game::Game()
     }
     std::cout << "created roaming state\n";
     PlayerStateRegistrar::HandleChangeState<RoamingState>();
+    PlayerStateRegistrar::AddBackgroundInstance< DebugService>();
 }
 void Game::run()
 {

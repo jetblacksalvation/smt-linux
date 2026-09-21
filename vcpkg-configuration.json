@@ -3,10 +3,7 @@
     "kind": "git",
     "baseline": "7f9f0e44db287e8e67c0e888141bfa200ab45121",
     "repository": "https://github.com/microsoft/vcpkg"
-  },
-  "overlay-ports": [
-  "/home/deck/vscode/smt-linux/ports" 
-]
+  }
 ,
   "registries": [
     {

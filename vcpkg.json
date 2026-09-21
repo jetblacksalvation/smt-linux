@@ -1,7 +1,6 @@
 {
   "dependencies": [
-    "cxxopts",
-    "xsimd",
+
     "sfml",
     "nlohmann-json"
 

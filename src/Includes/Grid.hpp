@@ -13,14 +13,8 @@ class GridHelper {
 public: 
     GridHelper() ;
     //GridHelper(RoamingState*);
-    GridHelper(std::ifstream);
+    GridHelper(const std::string& path);
     void gridToWorld(); //loads datas into world... 
-
-    struct ObjectTypeWithOptionalEvent
-    {
-        char wallType; // 
-        std::optional<std::string> id;// id can be unique or not, it determins what the function associated with the cell will do. 
-    };
 
 
     std::vector<std::vector<int>> gridData; 
@@ -31,7 +25,6 @@ public:
     
 
 private:
-    std::vector<int> gridValues; 
 };
 
 
