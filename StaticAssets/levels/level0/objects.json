@@ -1,4 +1,24 @@
 {
+  "static_objects": [
+    {
+      "id": "brick_wall",
+      "int": 1,
+      "walkable": false,
+      "texture": "defaultWallTexture.png"
+
+    },
+    {
+      "id": "player_spawn",
+      "int": 2,
+      "walkable": true
+    },
+    {
+      "id": "floor_tile",
+      "int": 0,
+      "walkable": true
+    }
+  ],
+
   "objects": [
     {
       "id": "door_level1",

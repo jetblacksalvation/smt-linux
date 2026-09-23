@@ -65,7 +65,6 @@ RoamingState::RoamingState()
 
     std::cout << "Roaming State Instantiated!\n";
     texture.loadFromFile(std::string(ASSET_PATH) + "/levels/level0/defaultWallTexture.png");
-    sprite.setTexture(texture);
     OnLoad();
 }
 void RoamingState::MovePlayer()
@@ -93,10 +92,14 @@ void RoamingState::MovePlayer()
 
     if (newPosition.x < gridData.gridData.size() && newPosition.y < gridData.gridData[newPosition.x].size())
     {
-        if (gridData.gridData[newPosition.x][newPosition.y] == 0 || gridData.gridData[newPosition.x][newPosition.y] ==2)
-        {
-            setGridPos(newPosition);
-        }
+		for (const auto& tile : tiles)
+		{
+			if (gridData.gridData[newPosition.x][newPosition.y] == tile.getValue() && tile.isWalkable())
+			{
+                setGridPos(newPosition);
+				std::cout << "You stepped on a " << tile.getId() << " tile at position (" << newPosition.x << ", " << newPosition.y << ")." << std::endl;
+            }
+		}
     }
 }
 
